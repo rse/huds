@@ -28,23 +28,25 @@
     <div class="hud">
         Hello World {{ event }}
         <i class="fa fa-eye"></i>
-        <progress-bar class="progress" slots="20"></progress-bar>
+        <progress-bar ref="progressBar" class="progress" slots="20"></progress-bar>
     </div>
 </template>
 
-<style scoped>
+<style lang="less" scoped>
 .hud {
     width: 100vw;
     height: 100vh;
     position: relative;
     font-family: sans-serif;
     font-size: 22pt;
-}
-.progress {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    width: calc(100% - 40px);
+    .progress {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        width: calc(100% - 40px);
+        height: 60px;
+        opacity: 0.8;
+    }
 }
 </style>
 
@@ -55,14 +57,28 @@ module.exports = {
         event: "test"
     }),
     components: {
-        "progress-bar": httpVueLoader("progress-bar.vue")
+        "progress-bar": "url:progress-bar.vue"
     },
     created () {
         huds.on("receive", (message) => {
             this.event = message
         })
-        Mousetrap.bind("ctrl+a x", (e) => {
-            console.log("MT", e)
+        Mousetrap.bind("left", (e) => {
+            let pb = this.$refs.progressBar
+            console.log("prev")
+            huds.send("sample", "progress.event=prev")
+            // pb.$emit("prev")
+        })
+        Mousetrap.bind("right", (e) => {
+            let pb = this.$refs.progressBar
+            console.log("next")
+            huds.send("sample", "progress.event=next")
+            // pb.$emit("next")
+        })
+        huds.bind("progress", [ "event" ], (key, val) => {
+            let pb = this.$refs.progressBar
+            if (val === "prev" || val === "next")
+                pb.$emit(val)
         })
     }
 }

@@ -10,11 +10,12 @@
     "license":                             "MIT",
     "dependencies": {
         "vue":                             "2.6.11",
+        "vue-element-resize-detector":     "1.0.5",
         "http-vue-loader":                 "1.4.2",
+        "less":                            "3.11.1",
         "@fortawesome/fontawesome-free":   "5.12.1",
         "mousetrap":                       "1.6.5",
         "animejs":                         "3.1.0",
-        "vivus":                           "0.4.5",
-        "two.js":                          "0.7.0-stable.1"
+        "vivus":                           "0.4.5"
     }
 }

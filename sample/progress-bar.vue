@@ -25,17 +25,19 @@
 -->
 
 <template>
-    <div class="progress-bar">
-        slots: {{ slots }}, pos: {{ pos }}
-        <div class="two" ref="two">
+    <div v-resize @resize="onResize" class="progress-bar">
+        <div class="svg" ref="svg">
         </div>
     </div>
 </template>
 
-<style scoped>
+<style lang="less" scoped>
 .progress-bar {
-    color: red;
-    border: 2px solid green;
+    border: 2px solid red;
+    .svg {
+        width: 100%;
+        height: 100%;
+    }
 }
 </style>
 
@@ -49,24 +51,92 @@ module.exports = {
         pos: 0
     }),
     created () {
-        huds.bind("progress-bar", [ "event" ], (key, val) => {
-            if (val === "prev" && this.pos > 0)
+        this.$on("prev", () => {
+            console.log("PREV")
+            if (this.pos > 0)
                 this.pos--
-            else if (val === "next" && this.pos < this.slots)
+            this.updatex()
+        })
+        this.$on("next", () => {
+            console.log("NEXT")
+            if (this.pos < this.slots - 1)
                 this.pos++
+            this.updatex()
         })
     },
     mounted () {
-        let el = this.$refs.two
-        var two = new Two({
-            width: 200,
-            height: 200
-        }).appendTo(el)
-        var circle = two.makeCircle(72, 100, 50)
-        circle.fill = '#FF8000'
-        circle.stroke = 'orangered'
-        circle.linewidth = 5
-        two.update()
+        this.renderx()
+    },
+    methods: {
+        renderx () {
+            let el = this.$refs.svg
+            let w = el.clientWidth
+            let h = el.clientHeight
+            let R = new Rune({
+                container: el,
+                width:  w,
+                height: h
+            })
+            this.R = R
+            let W = R.width
+            let H = R.height
+            this.box = []
+            for (let i = this.slots - 1; i >= 0; i--) {
+                let w = Math.floor(W / this.slots) - 0.1
+                let h = H
+                let x = i * w
+                let y = 0
+                let r = Math.floor(w * 0.20)
+                let g = R.group()
+                let p = R.path(0, 0)
+                    .moveTo(x, y)
+                    .lineTo(x + w - r, y)
+                    .curveTo(x + w, y + r/4, x + w, y + r)
+                    .lineTo(x + w + r, y + h/2)
+                    .lineTo(x + w, y + h - r)
+                    .curveTo(x + w, y + h - r/4, x + w - r, y + h)
+                    .lineTo(x, y + h)
+                    .lineTo(x, y)
+                    .closePath()
+                    .stroke(false)
+                let s = p.copy()
+                    .stroke(false)
+                    .fill("rgba(0,0,0,0.1)")
+                    .move(4, 0, true)
+                let t = R.text(i.toString(), x + w/4, y + h - h/4)
+                    .fontFamily("Arial")
+                    .fontSize(h * 2/4)
+                    .stroke(false)
+                s.addTo(g)
+                p.addTo(g)
+                t.addTo(g)
+                this.box.unshift({ g, s, p, t })
+            }
+            this.updatex()
+            R.draw()
+        },
+        updatex () {
+            let R = this.R
+            for (let i = this.slots - 1; i >= 0; i--) {
+                let { g, s, p, t } = this.box[i]
+                if (i < this.pos) {
+                    p.fill("#c0d0f0")
+                    t.fill("#90a0e0")
+                }
+                else if (i === this.pos) {
+                    p.fill("#6699cc")
+                    t.fill("#ffffff")
+                }
+                else {
+                    p.fill("#f0f0f0")
+                    t.fill("#cccccc")
+                }
+            }
+            R.draw()
+        },
+        onResize (e) {
+            console.log("resize event", e.detail.width, e.detail.height)
+        }
     }
 }
 </script>

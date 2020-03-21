@@ -36,7 +36,9 @@
         <script type="text/javascript" src="node_modules/mousetrap/mousetrap.min.js"></script>
         <script type="text/javascript" src="node_modules/animejs/lib/anime.min.js"></script>
         <script type="text/javascript" src="node_modules/vivus/dist/vivus.min.js"></script>
-        <script type="text/javascript" src="node_modules/two.js/build/two.min.js"></script>
+        <script>less = { env: "development", logLevel: 0 };</script>
+        <script type="text/javascript" src="node_modules/less/dist/less.min.js"></script>
+        <script type="text/javascript" src="rune.js"></script>
         <link rel="stylesheet" type="text/css" href="node_modules/@fortawesome/fontawesome-free/css/all.min.css">
         <script type="text/javascript" src="node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
     </head>
@@ -57,8 +59,13 @@
                 position: relative;
             }
         </style>
+        <script type="text/javascript" src="node_modules/vue-element-resize-detector/dist/vue-element-resize-detector.umd.js"></script>
         <script>
-            new Vue({ el: "#hud", components: { "hud": httpVueLoader("hud.vue") }})
+            Vue.use(window["vue-element-resize-detector"])
+            httpVueLoader.langProcessor.less = (lessText) =>
+                less.render(lessText, {}).then((result) => result.css)
+            Vue.use(httpVueLoader)
+            vm = new Vue({ el: "#hud", components: { "hud": "url:hud.vue" }})
             huds = new HUDS()
             huds.on("open",    ()        => { console.log("HUDS: WebSocket: open") })
             huds.on("close",   ()        => { console.log("HUDS: WebSocket: close") })
