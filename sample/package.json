@@ -1,0 +1,20 @@
+{
+    "name":                                "sample",
+    "description":                         "Sample HUD",
+    "version":                             "0.0.0",
+    "author": {
+        "name":                            "Dr. Ralf S. Engelschall",
+        "email":                           "rse@engelschall.com",
+        "url":                             "http://engelschall.com"
+    },
+    "license":                             "MIT",
+    "dependencies": {
+        "vue":                             "2.6.11",
+        "http-vue-loader":                 "1.4.2",
+        "@fortawesome/fontawesome-free":   "5.12.1",
+        "mousetrap":                       "1.6.5",
+        "animejs":                         "3.1.0",
+        "vivus":                           "0.4.5",
+        "two.js":                          "0.7.0-stable.1"
+    }
+}
