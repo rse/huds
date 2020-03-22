@@ -25,7 +25,7 @@
 -->
 
 <template>
-    <div class="progress-bar">
+    <div v-bind:style="style" class="progress-bar">
         <div class="svg" ref="svg">
         </div>
     </div>
@@ -33,6 +33,7 @@
 
 <style lang="less" scoped>
 .progress-bar {
+    opacity: var(--opacity);
     .svg {
         width: 100%;
         height: 100%;
@@ -44,11 +45,22 @@
 module.exports = {
     name: "progress",
     props: {
-        slots: { default: 10, type: Number }
+        opacity:     { type: Number, default: 1.0 },
+        slots:       { type: Number, default: 10 },
+        donecolorbg: { type: String, default: "" },
+        donecolorfg: { type: String, default: "" },
+        currcolorbg: { type: String, default: "" },
+        currcolorfg: { type: String, default: "" },
+        todocolorbg: { type: String, default: "" },
+        todocolorfg: { type: String, default: "" }
     },
     data: () => ({
-        pos: 0
+        pos: 0,
+        config: huds.config()
     }),
+    computed: {
+        style: HUDS.vueprop2cssvar()
+    },
     created () {
         this.$on("prev", () => {
             if (this.pos > 0)
@@ -107,14 +119,14 @@ module.exports = {
             for (let i = this.slots - 1; i >= 0; i--) {
                 let { n, g, p, t } = this.box[i]
                 if (i < this.pos) {
-                    p.fill("#6699cc")
-                    t.fill("#f0f0ff")
+                    p.fill(this.donecolorbg)
+                    t.fill(this.donecolorfg)
                         .font({ weight: "normal" })
                 }
                 else if (i === this.pos) {
                     n.front()
-                    p.fill("#336699")
-                    t.fill("#ffffff")
+                    p.fill(this.currcolorbg)
+                    t.fill(this.currcolorfg)
                         .font({ weight: 900 })
                     anime.timeline({
                         targets: g.node,
@@ -131,8 +143,8 @@ module.exports = {
                     .finished.then(() => {})
                 }
                 else {
-                    p.fill("#f0f0f0")
-                    t.fill("#999999")
+                    p.fill(this.todocolorbg)
+                    t.fill(this.todocolorfg)
                         .font({ weight: "normal" })
                 }
             }

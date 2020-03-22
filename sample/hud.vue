@@ -36,7 +36,16 @@
             v-bind:titletext="config.title.titletext"
             v-bind:titlecolor="config.title.titlecolor"
         ></title-bar>
-        <progress-bar ref="progressBar" class="progress" v-bind:slots="config.progress.slots"></progress-bar>
+        <progress-bar ref="progressBar" class="progress"
+            v-bind:opacity="config.progress.opacity"
+            v-bind:slots="config.progress.slots"
+            v-bind:donecolorbg="config.progress.donecolorbg"
+            v-bind:donecolorfg="config.progress.donecolorfg"
+            v-bind:currcolorbg="config.progress.currcolorbg"
+            v-bind:currcolorfg="config.progress.currcolorfg"
+            v-bind:todocolorbg="config.progress.todocolorbg"
+            v-bind:todocolorfg="config.progress.todocolorfg"
+        ></progress-bar>
         <banner ref="banner" class="banner">PAUSE</banner>
     </div>
 </template>
@@ -52,16 +61,14 @@
         position: absolute;
         right: 10px;
         bottom: 10px;
-        width: calc(30%);
-        opacity: 0.8;
+        width: 30%;
     }
     > .progress {
         position: absolute;
         bottom: 10px;
         left: 10px;
-        width: calc(70%);
+        width: 70%;
         height: 100px;
-        opacity: 0.8;
     }
 }
 </style>

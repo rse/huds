@@ -25,7 +25,7 @@
 -->
 
 <template>
-    <div class="title-bar">
+    <div v-bind:style="style" class="title-bar">
         <div class="bar" ref="bar">
             <div class="icon">
                 <i v-bind:class="[ 'fa', 'fa-' + iconname ]"></i>
@@ -40,31 +40,31 @@
 
 <style lang="less" scoped>
 .title-bar {
-    opacity: @title-opacity;
+    opacity: var(--opacity);
     .bar {
         margin: 20px;
         border-radius: 8px;
         padding: 4px;
         padding-left: 20px;
-        background-color: @title-background;
+        background-color: var(--background);
         display: flex;
         flex-direction: row;
         .icon {
             padding-right: 20px;
-            color: @title-iconcolor;
+            color: var(--iconcolor);
             font-size: 35pt;
         }
         .person {
             font-family: "TypoPRO Fira Sans";
             font-weight: normal;
             font-size: 14pt;
-            color: @title-namecolor;
+            color: var(--namecolor);
         }
         .title {
             font-family: "TypoPRO Fira Sans";
             font-weight: bold;
             font-size: 19pt;
-            color: @title-titlecolor;
+            color: var(--titlecolor);
         }
     }
 }
@@ -82,6 +82,9 @@ module.exports = {
         namecolor:  { type: String, default: "" },
         titletext:  { type: String, default: "" },
         titlecolor: { type: String, default: "" }
+    },
+    computed: {
+        style: HUDS.vueprop2cssvar()
     },
     created () {
         this.$on("bounce", () => {
