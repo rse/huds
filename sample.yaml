@@ -40,7 +40,7 @@ banner:
             titlecolor: "#ffffff"
         -   name:       hint
             key:        h
-            iconname:   bell
+            iconname:   exclamation-circle
             iconcolor:  "#ffdd00"
             titletext:  HINT
             titlecolor: "#ffffff"

@@ -25,32 +25,37 @@
 -->
 
 <template>
-    <div v-if="enabled" v-bind:style="style" class="banner" ref="banner">
-        <span class="icon"><i v-bind:class="[ 'fa', 'fa-' + iconname ]"></i></span>
-        {{ titletext }}
+    <div v-show="enabled" v-bind:style="style" class="banner" ref="banner">
+        <div class="bar" ref="bar">
+            <span class="icon"><i v-bind:class="[ 'fa', 'fa-' + iconname ]"></i></span>
+            {{ titletext }}
+        </div>
     </div>
 </template>
 
 <style lang="less" scoped>
 .banner {
     opacity: var(--opacity);
-    font-family: "TypoPRO Fira Sans";
-    font-weight: bold;
-    font-size: 100pt;
-    padding-top: 80px;
-    background-color: var(--background);
-    color: var(--titlecolor);
-    text-align: center;
-    height: 240px;
-    width: 1200px;
-    position: absolute;
-    top: 600px;
-    left: -220px;
-    transform: rotate(-45deg);
-    transform-origin: top left;
-    .icon {
-        color: var(--iconcolor);
-        padding-right: 20px;
+    .bar {
+        opacity: 0.0;
+        font-family: "TypoPRO Fira Sans";
+        font-weight: bold;
+        font-size: 100pt;
+        padding-top: 80px;
+        background-color: var(--background);
+        color: var(--titlecolor);
+        text-align: center;
+        height: 240px;
+        width: 1200px;
+        position: absolute;
+        top: 600px;
+        left: -220px;
+        transform: rotate(-45deg);
+        transform-origin: top left;
+        .icon {
+            color: var(--iconcolor);
+            padding-right: 20px;
+        }
     }
 }
 </style>
@@ -74,22 +79,19 @@ module.exports = {
     },
     created () {
         this.$on("toggle", () => {
-            this.enabled = !this.enabled
-            if (this.enabled) {
-                /*
-                let banner = this.$refs.banner
-                anime.timeline({
-                    targets: banner,
-                    duration: 400,
-                    autoplay: true,
-                    direction: "normal",
-                    loop: 3,
-                    easing: "easeInOutSine"
-                })
-                .add({ scaleX: 1.10, scaleY: 1.20, translateY:  0, translateX:  0 })
-                .add({ scaleX: 1.00, scaleY: 1.00, translateY:  0, translateX:  0 })
-                */
-            }
+            let el = this.$refs.bar
+            let oldstate = this.enabled
+            let newstate = !oldstate
+            if (!oldstate)
+                this.enabled = true
+            anime.timeline({
+                targets:  el,
+                duration: 800,
+                autoplay: true,
+                easing:   "easeInOutSine"
+            })
+            .add({ opacity: newstate ? 1.0 : 0.0 })
+            .finished.then(() => { this.enabled = newstate })
         })
     }
 }
