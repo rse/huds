@@ -27,8 +27,11 @@
 <template>
     <div class="title-bar">
         <div class="bar" ref="bar">
-            <div v-if="person" class="person">{{ person }}</div>
-            <div class="title">{{ title }}</div>
+            <div class="icon"><i class="fa fa-graduation-cap"></i></div>
+            <div class="text">
+                <div v-if="person" class="person">{{ person }}</div>
+                <div class="title">{{ title }}</div>
+            </div>
         </div>
     </div>
 </template>
@@ -42,6 +45,13 @@
         padding: 4px;
         padding-left: 20px;
         background-color: #336699;
+        display: flex;
+        flex-direction: row;
+        .icon {
+            padding-right: 20px;
+            color: #77aadd;
+            font-size: 35pt;
+        }
         .person {
             font-family: "TypoPRO Fira Sans";
             font-weight: normal;
@@ -51,7 +61,7 @@
         .title {
             font-family: "TypoPRO Fira Sans";
             font-weight: bold;
-            font-size: 18pt;
+            font-size: 19pt;
             color: #f0f0f0;
         }
     }

@@ -26,11 +26,11 @@
 
 <template>
     <div class="hud">
-        <i class="fa fa-eye"></i> Event: {{ event }}
         <title-bar ref="titleBar" class="title"
             person="Dr. Ralf S. Engelschall"
             title="Grundlagen der IT-Architektur"></title-bar>
         <progress-bar ref="progressBar" class="progress" slots="16"></progress-bar>
+        <banner ref="banner" class="banner">PAUSE</banner>
     </div>
 </template>
 
@@ -66,6 +66,7 @@ module.exports = {
         event: "test"
     }),
     components: {
+        "banner":       "url:banner.vue",
         "title-bar":    "url:title-bar.vue",
         "progress-bar": "url:progress-bar.vue"
     },
@@ -82,6 +83,14 @@ module.exports = {
         })
         Mousetrap.bind("space", (e) => {
             huds.send(huds.id, "title.event=bounce")
+        })
+        Mousetrap.bind("b", (e) => {
+            huds.send(huds.id, "banner.event=toggle")
+        })
+        huds.bind("banner", [ "event" ], (key, val) => {
+            let b = this.$refs.banner
+            if (val === "toggle")
+                b.$emit("toggle")
         })
         huds.bind("title", [ "event" ], (key, val) => {
             let tb = this.$refs.titleBar

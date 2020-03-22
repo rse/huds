@@ -93,7 +93,7 @@ module.exports = {
                 else
                     p.Q(0, h, 0, h - r).L(r, h/2).L(0, r).Q(0, 0, r, 0)
                 p.Z()
-                let t = g.text(i.toString())
+                let t = g.text((i + 1).toString())
                     .font({ family: "TypoPRO Fira Sans", size: h * 0.75, anchor: "middle" })
                 p.move(b, b)
                 t.move(b, b)
@@ -132,7 +132,7 @@ module.exports = {
                 }
                 else {
                     p.fill("#f0f0f0")
-                    t.fill("#cccccc")
+                    t.fill("#999999")
                         .font({ weight: "normal" })
                 }
             }
