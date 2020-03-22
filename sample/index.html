@@ -68,7 +68,6 @@
         </style>
         <script>
             huds = new HUDS()
-            console.log(huds.config({ flat: true, sep: "-" }))
             httpVueLoader.langProcessor.less = (lessText) =>
                 less.render(lessText, { globalVars: huds.config({ flat: true, sep: "-" }) }).then((result) => result.css)
             Vue.use(httpVueLoader)
