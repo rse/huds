@@ -59,9 +59,7 @@
                 position: relative;
             }
         </style>
-        <script type="text/javascript" src="node_modules/vue-element-resize-detector/dist/vue-element-resize-detector.umd.js"></script>
         <script>
-            Vue.use(window["vue-element-resize-detector"])
             httpVueLoader.langProcessor.less = (lessText) =>
                 less.render(lessText, {}).then((result) => result.css)
             Vue.use(httpVueLoader)

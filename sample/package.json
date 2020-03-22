@@ -10,7 +10,6 @@
     "license":                             "MIT",
     "dependencies": {
         "vue":                             "2.6.11",
-        "vue-element-resize-detector":     "1.0.5",
         "http-vue-loader":                 "1.4.2",
         "less":                            "3.11.1",
         "@fortawesome/fontawesome-free":   "5.12.1",

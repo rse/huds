@@ -25,7 +25,7 @@
 -->
 
 <template>
-    <div v-resize @resize="onResize" class="progress-bar">
+    <div class="progress-bar">
         <div class="svg" ref="svg">
         </div>
     </div>
@@ -133,9 +133,6 @@ module.exports = {
                 }
             }
             R.draw()
-        },
-        onResize (e) {
-            console.log("resize event", e.detail.width, e.detail.height)
         }
     }
 }
