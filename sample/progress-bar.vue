@@ -33,7 +33,6 @@
 
 <style lang="less" scoped>
 .progress-bar {
-    border: 2px solid red;
     .svg {
         width: 100%;
         height: 100%;
@@ -80,11 +79,11 @@ module.exports = {
             let H = R.height
             this.box = []
             for (let i = this.slots - 1; i >= 0; i--) {
-                let w = Math.floor(W / this.slots) - 0.1
+                let w = Math.floor(W / this.slots) - 1
                 let h = H
                 let x = i * w
                 let y = 0
-                let r = Math.floor(w * 0.20)
+                let r = Math.floor(h * 0.15)
                 let g = R.group()
                 let p = R.path(0, 0)
                     .moveTo(x, y)
@@ -94,13 +93,14 @@ module.exports = {
                     .lineTo(x + w, y + h - r)
                     .curveTo(x + w, y + h - r/4, x + w - r, y + h)
                     .lineTo(x, y + h)
+                    .lineTo(x + r + 4, y + h/2)
                     .lineTo(x, y)
                     .closePath()
                     .stroke(false)
                 let s = p.copy()
                     .stroke(false)
                     .fill("rgba(0,0,0,0.1)")
-                    .move(4, 0, true)
+                    .move(0, 0, true)
                 let t = R.text(i.toString(), x + w/4, y + h - h/4)
                     .fontFamily("Arial")
                     .fontSize(h * 2/4)
