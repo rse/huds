@@ -65,6 +65,8 @@ class HUDS extends EventEmitter {
             this.emit("error", event)
         })
         this.ws.addEventListener("message", (event) => {
+            if (event.data === "")
+                return
             this.emit("receive", event.data)
         })
     }

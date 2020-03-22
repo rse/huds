@@ -284,7 +284,7 @@ const my            = require("../package.json")
         log(2, `EVENT: emit: source-hud=${source}, target-hud=${target}, event=${event}`)
         if (peers[target] !== undefined) {
             peers[target].forEach((peer) => {
-                log(3, `WebSocket: send: remote=${peer.req.connection.remoteAddress}, hud=${target}, event=${event}`)
+                log(3, `WebSocket: send: remote=${peer.req.connection.remoteAddress}, hud=${target}, event="${event}"`)
                 peer.ws.send(event)
             })
         }
