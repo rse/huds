@@ -56,6 +56,10 @@
             v-bind:titletext="banner.titletext"
             v-bind:titlecolor="banner.titlecolor"
         ></banner>
+        <logo class="logo"
+            v-bind:opacity="config.logo.opacity"
+            v-html="config.logo.svg"
+        ></logo>
     </div>
 </template>
 
@@ -79,6 +83,13 @@
         width: 70%;
         height: 100px;
     }
+    > .logo {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        width: 150px;
+        height: auto;
+    }
 }
 </style>
 
@@ -88,12 +99,14 @@ module.exports = {
     data: () => ({
         event: "test",
         config: huds.config(),
-        banner: null
+        banner: null,
+        logo: null
     }),
     components: {
         "banner":       "url:banner.vue",
         "title-bar":    "url:title-bar.vue",
-        "progress-bar": "url:progress-bar.vue"
+        "progress-bar": "url:progress-bar.vue",
+        "logo":         "url:logo.vue"
     },
     created () {
         huds.on("receive", (message) => {
