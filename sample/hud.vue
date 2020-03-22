@@ -65,15 +65,11 @@ module.exports = {
         })
         Mousetrap.bind("left", (e) => {
             let pb = this.$refs.progressBar
-            console.log("prev")
             huds.send("sample", "progress.event=prev")
-            // pb.$emit("prev")
         })
         Mousetrap.bind("right", (e) => {
             let pb = this.$refs.progressBar
-            console.log("next")
             huds.send("sample", "progress.event=next")
-            // pb.$emit("next")
         })
         huds.bind("progress", [ "event" ], (key, val) => {
             let pb = this.$refs.progressBar

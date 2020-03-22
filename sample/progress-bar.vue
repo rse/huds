@@ -52,13 +52,11 @@ module.exports = {
     }),
     created () {
         this.$on("prev", () => {
-            console.log("PREV")
             if (this.pos > 0)
                 this.pos--
             this.updatex()
         })
         this.$on("next", () => {
-            console.log("NEXT")
             if (this.pos < this.slots - 1)
                 this.pos++
             this.updatex()
