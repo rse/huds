@@ -67,11 +67,12 @@
             }
         </style>
         <script>
+            huds = new HUDS()
+            console.log(huds.config({ flat: true, sep: "-" }))
             httpVueLoader.langProcessor.less = (lessText) =>
-                less.render(lessText, {}).then((result) => result.css)
+                less.render(lessText, { globalVars: huds.config({ flat: true, sep: "-" }) }).then((result) => result.css)
             Vue.use(httpVueLoader)
             vm = new Vue({ el: "#hud", components: { "hud": "url:hud.vue" }})
-            huds = new HUDS()
             huds.on("open",    ()        => { console.log("HUDS: WebSocket: open") })
             huds.on("close",   ()        => { console.log("HUDS: WebSocket: close") })
             huds.on("receive", (message) => { console.log("HUDS: WebSocket: receive", JSON.stringify(message)) })

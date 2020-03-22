@@ -34,6 +34,7 @@ const HAPIHeader    = require("hapi-plugin-header")
 const yargs         = require("yargs")
 const chalk         = require("chalk")
 const moment        = require("moment")
+const jsYAML        = require("js-yaml")
 const my            = require("../package.json")
 
 /*  establísh asynchronous context  */
@@ -65,7 +66,7 @@ const my            = require("../package.json")
         .string("P").nargs("P", 1).alias("P", "password").default("P", "")
             .describe("P", "authenticating password for service")
         .array("d").nargs("d", 1).alias("d", "define").default("d", [])
-            .describe("d", "define HUD id and directory")
+            .describe("d", "define HUD id:dir[,file]")
         .version(false)
         .strict()
         .showHelpOnFail(true)
@@ -100,10 +101,10 @@ const my            = require("../package.json")
     if (argv.define.length === 0)
         throw new Error("no HUDs defined")
     for (const spec of argv.define) {
-        const m = spec.match(/^(.+?):(.+)$/)
+        const m = spec.match(/^(.+?):(.+?)(?:,(.+))?$/)
         if (m === null)
-            throw new Error(`invalid HUD id/directory combination "${spec}"`)
-        const [ , id, dir ] = m
+            throw new Error(`invalid HUD id/directory/config combination "${spec}"`)
+        const [ , id, dir, config ] = m
         if (HUD[id] !== undefined)
             throw new Error(`HUD "${id}" already defined`)
         const stat = await fs.promises.stat(dir).catch(() => null)
@@ -111,7 +112,17 @@ const my            = require("../package.json")
             throw new Error(`HUD path "${dir}" not found`)
         if (!stat.isDirectory())
             throw new Error(`HUD path "${dir}" is not a directory`)
-        HUD[id] = dir
+        let data = {}
+        if (config) {
+            const stat = await fs.promises.stat(config).catch(() => null)
+            if (stat === null)
+                throw new Error(`HUD config path "${config}" not found`)
+            if (!stat.isFile())
+                throw new Error(`HUD config path "${config}" is not a file`)
+            const yaml = await fs.promises.readFile(config, { encoding: "utf8" })
+            data = jsYAML.safeLoad(yaml)
+        }
+        HUD[id] = { dir, data }
     }
 
     /*  log messages  */
@@ -266,8 +277,8 @@ const my            = require("../package.json")
                 return h.file(path.join(__dirname, "../dst/huds-client.js"), { confine: false })
             if (file === "")
                 file = "index.html"
-            const filepath = path.join(HUD[id], file)
-            const stat = await fs.promises.stat(path.join(HUD[id], file)).catch(() => null)
+            const filepath = path.join(HUD[id].dir, file)
+            const stat = await fs.promises.stat(path.join(HUD[id].dir, file)).catch(() => null)
             if (stat === null)
                 return h.response().code(404)
             if (!stat.isFile())
@@ -289,6 +300,25 @@ const my            = require("../package.json")
             })
         }
     }
+
+    /*  serve command data  */
+    server.route({
+        method:   "GET",
+        path:     "/{id}/huds",
+        options: {
+            auth: requireAuth ? { mode: "required", strategy: "basic" } : false,
+            cache: { expiresIn: 0, privacy: "private" }
+        },
+        handler: async (req, h) => {
+            const id = req.params.id
+            if (HUD[id] === undefined)
+                return h.response().code(404)
+            const lib = await fs.promises.readFile(path.join(__dirname, "../dst/huds-client.js"), { encoding: "utf8" })
+            const cfg = `HUDS.config(${JSON.stringify(HUD[id].data)})`
+            const js = `${lib};\n${cfg};\n`
+            return h.response(js).type("text/javascript").code(200)
+        }
+    })
 
     /*  provide exclusive WebSocket route  */
     server.route({

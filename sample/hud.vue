@@ -27,9 +27,16 @@
 <template>
     <div class="hud">
         <title-bar ref="titleBar" class="title"
-            person="Dr. Ralf S. Engelschall"
-            title="Grundlagen der IT-Architektur"></title-bar>
-        <progress-bar ref="progressBar" class="progress" slots="16"></progress-bar>
+            v-bind:opacity="config.title.opacity"
+            v-bind:background="config.title.background"
+            v-bind:iconname="config.title.iconname"
+            v-bind:iconcolor="config.title.iconcolor"
+            v-bind:nametext="config.title.nametext"
+            v-bind:namecolor="config.title.namecolor"
+            v-bind:titletext="config.title.titletext"
+            v-bind:titlecolor="config.title.titlecolor"
+        ></title-bar>
+        <progress-bar ref="progressBar" class="progress" v-bind:slots="config.progress.slots"></progress-bar>
         <banner ref="banner" class="banner">PAUSE</banner>
     </div>
 </template>
@@ -63,7 +70,8 @@
 module.exports = {
     name: "hud",
     data: () => ({
-        event: "test"
+        event: "test",
+        config: huds.config()
     }),
     components: {
         "banner":       "url:banner.vue",

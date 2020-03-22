@@ -1,0 +1,48 @@
+##
+##  sample.yaml -- Sample HUD Configuration
+##
+
+title:
+    opacity:        0.80
+    background:     "#336699"
+    iconname:       graduation-cap
+    iconcolor:      "#77aadd"
+    nametext:       Dr. Ralf S. Engelschall
+    namecolor:      "#e0f0ff"
+    titletext:      Grundlagen der IT-Architektur
+    titlecolor:     "#ffffff"
+
+progress:
+    opacity:        0.80
+    slots:          20
+    donecolorbg:    "#6699cc"
+    donecolorfg:    "#f0f0ff"
+    currcolorbg:    "#336699"
+    currcolorfg:    "#ffffff"
+    todocolorbg:    "#f0f0f0"
+    todocolorfg:    "#999999"
+
+banner:
+    opacity:        0.80
+    background:     "#000000"
+    pause:
+        iconname:   pause-circle
+        iconcolor:  "#336699"
+        titletext:  PAUSE
+        titlecolor: "#ffffff"
+    rant:
+        iconname:   radiation-alt
+        iconcolor:  "#ff0000"
+        titletext:  RANT
+        titlecolor: "#ffffff"
+    hint:
+        iconname:   bell-exclamation
+        iconcolor:  "#ffff00"
+        titletext:  HINT
+        titlecolor: "#ffffff"
+    qna:
+        iconname:   comments
+        iconcolor:  "#33ff00"
+        titletext:  Q&A
+        titlecolor: "#ffffff"
+

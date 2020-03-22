@@ -48,6 +48,9 @@ class HUDS extends EventEmitter {
 
         /*  start with no WebSocket connection  */
         this.ws = null
+
+        /*  start with no configuration  */
+        this.data = {}
     }
 
     /*  connect to server  */
@@ -96,6 +99,33 @@ class HUDS extends EventEmitter {
                     receiver(key, val)
             }
         })
+    }
+
+    /*  set HUD configuration  */
+    static config (config) {
+        HUDS._config = config
+    }
+
+    /*  get HUD configuration  */
+    config (options = {}) {
+        options = Object.assign({}, { flat: false, sep: "." }, options)
+        if (options.flat) {
+            const result = {}
+            const walk = (name, data) => {
+                if (typeof data === "object" && data instanceof Array && data !== null)
+                    for (let i = 0; i < data.length; i++)
+                        walk(name.concat([ i ]), data[i])
+                else if (typeof data === "object" && data !== null)
+                    for (const key of Object.keys(data))
+                        walk(name.concat([ key ]), data[key])
+                else
+                    result[name.join(options.sep)] = data
+            }
+            walk([], HUDS._config)
+            return result
+        }
+        else
+            return HUDS._config
     }
 }
 

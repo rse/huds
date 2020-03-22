@@ -27,10 +27,12 @@
 <template>
     <div class="title-bar">
         <div class="bar" ref="bar">
-            <div class="icon"><i class="fa fa-graduation-cap"></i></div>
+            <div class="icon">
+                <i v-bind:class="[ 'fa', 'fa-' + iconname ]"></i>
+            </div>
             <div class="text">
-                <div v-if="person" class="person">{{ person }}</div>
-                <div class="title">{{ title }}</div>
+                <div v-if="nametext" class="person">{{ nametext }}</div>
+                <div v-if="titletext" class="title">{{ titletext }}</div>
             </div>
         </div>
     </div>
@@ -38,31 +40,31 @@
 
 <style lang="less" scoped>
 .title-bar {
-    opacity: 0.8;
+    opacity: @title-opacity;
     .bar {
         margin: 20px;
         border-radius: 8px;
         padding: 4px;
         padding-left: 20px;
-        background-color: #336699;
+        background-color: @title-background;
         display: flex;
         flex-direction: row;
         .icon {
             padding-right: 20px;
-            color: #77aadd;
+            color: @title-iconcolor;
             font-size: 35pt;
         }
         .person {
             font-family: "TypoPRO Fira Sans";
             font-weight: normal;
             font-size: 14pt;
-            color: #e0f0ff;
+            color: @title-namecolor;
         }
         .title {
             font-family: "TypoPRO Fira Sans";
             font-weight: bold;
             font-size: 19pt;
-            color: #f0f0f0;
+            color: @title-titlecolor;
         }
     }
 }
@@ -72,11 +74,15 @@
 module.exports = {
     name: "title-bar",
     props: {
-        person: { type: String, default: "" },
-        title:  { type: String, default: "" }
+        opacity:    { type: Number, default: 1.0 },
+        background: { type: String, default: "" },
+        iconname:   { type: String, default: "" },
+        iconcolor:  { type: String, default: "" },
+        nametext:   { type: String, default: "" },
+        namecolor:  { type: String, default: "" },
+        titletext:  { type: String, default: "" },
+        titlecolor: { type: String, default: "" }
     },
-    data: () => ({
-    }),
     created () {
         this.$on("bounce", () => {
             let bar = this.$refs.bar
@@ -90,7 +96,6 @@ module.exports = {
             })
             .add({ scaleX: 1.10, scaleY: 1.20, translateY:  0, translateX:  0 })
             .add({ scaleX: 1.00, scaleY: 1.00, translateY:  0, translateX:  0 })
-            .finished.then(() => {})
         })
     }
 }
