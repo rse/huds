@@ -76,8 +76,8 @@ module.exports = {
         this.$on("toggle", () => {
             this.enabled = !this.enabled
             if (this.enabled) {
+                /*
                 let banner = this.$refs.banner
-                console.log(banner)
                 anime.timeline({
                     targets: banner,
                     duration: 400,
@@ -88,6 +88,7 @@ module.exports = {
                 })
                 .add({ scaleX: 1.10, scaleY: 1.20, translateY:  0, translateX:  0 })
                 .add({ scaleX: 1.00, scaleY: 1.00, translateY:  0, translateX:  0 })
+                */
             }
         })
     }

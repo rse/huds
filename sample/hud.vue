@@ -87,7 +87,8 @@ module.exports = {
     name: "hud",
     data: () => ({
         event: "test",
-        config: huds.config()
+        config: huds.config(),
+        banner: null
     }),
     components: {
         "banner":       "url:banner.vue",
@@ -113,9 +114,19 @@ module.exports = {
                 huds.send(huds.id, `banner-${banner.name}.event=toggle`)
             })
             huds.bind(`banner-${banner.name}`, [ "event" ], (key, val) => {
-                let b = this.$refs[`banner-${banner.name}`][0]
-                if (val === "toggle")
-                    b.$emit("toggle")
+                if (val === "toggle") {
+                    let b = this.$refs[`banner-${banner.name}`][0]
+                    if (this.banner === b) {
+                        this.banner.$emit("toggle")
+                        this.banner = null
+                    }
+                    else {
+                        if (this.banner !== null)
+                            this.banner.$emit("toggle")
+                        b.$emit("toggle")
+                        this.banner = b
+                    }
+                }
             })
         }
         huds.bind("title", [ "event" ], (key, val) => {
