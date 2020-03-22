@@ -26,8 +26,7 @@
 
 <template>
     <div class="hud">
-        Hello World {{ event }}
-        <i class="fa fa-eye"></i>
+        <i class="fa fa-eye"></i> Event: {{ event }}
         <progress-bar ref="progressBar" class="progress" slots="20"></progress-bar>
     </div>
 </template>
@@ -61,15 +60,14 @@ module.exports = {
     },
     created () {
         huds.on("receive", (message) => {
-            this.event = message
+            if (message !== "")
+                this.event = message
         })
         Mousetrap.bind("left", (e) => {
-            let pb = this.$refs.progressBar
-            huds.send("sample", "progress.event=prev")
+            huds.send(huds.id, "progress.event=prev")
         })
         Mousetrap.bind("right", (e) => {
-            let pb = this.$refs.progressBar
-            huds.send("sample", "progress.event=next")
+            huds.send(huds.id, "progress.event=next")
         })
         huds.bind("progress", [ "event" ], (key, val) => {
             let pb = this.$refs.progressBar

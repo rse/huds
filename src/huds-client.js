@@ -27,7 +27,10 @@ const WebSocket    = require("reconnecting-websocket")
 
 class HUDS extends EventEmitter {
     constructor () {
+        /*  initialize EventEmitter  */
         super()
+
+        /*  determine own URL  */
         let url = ""
         if (document.location.protocol === "http:")
             url += "ws:"
@@ -38,9 +41,16 @@ class HUDS extends EventEmitter {
         url += document.location.pathname
         url += "event"
         this.url = url
+
+        /*  determine own HUD id  */
+        const m = document.location.pathname.match(/([^/]+)\/$/)
+        this.id = m[1]
+
+        /*  start with no WebSocket connection  */
         this.ws = null
     }
 
+    /*  connect to server  */
     connect () {
         this.disconnect()
         this.emit("connect", this.url)
@@ -59,12 +69,14 @@ class HUDS extends EventEmitter {
         })
     }
 
+    /*  disconnect from server  */
     disconnect () {
         this.emit("disconnect", this.url)
         if (this.ws !== null)
             this.ws.close()
     }
 
+    /*  send an event to a HUD  */
     send (id, event) {
         if (this.ws === null)
             throw new Error("not connected")
@@ -72,12 +84,13 @@ class HUDS extends EventEmitter {
         this.ws.send(`${id}=${event}`)
     }
 
-    bind (id, props, receiver) {
+    /*  bind to a HUD event  */
+    bind (comp, props, receiver) {
         this.on("receive", (message) => {
             const m = message.match(/^([^.]+)\.([^=]+)=(.*)$/)
             if (m !== null) {
-                const [ , comp, key, val ] = m
-                if (comp === id && props.indexOf(key) >= 0)
+                const [ , prefix, key, val ] = m
+                if (prefix === comp && props.indexOf(key) >= 0)
                     receiver(key, val)
             }
         })
