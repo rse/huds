@@ -25,21 +25,21 @@
 -->
 
 <template>
-    <div v-if="enabled" class="banner" ref="banner">
-        <span class="icon"><i class="fa fa-pause-circle"></i></span>
-        <slot></slot>
+    <div v-if="enabled" v-bind:style="style" class="banner" ref="banner">
+        <span class="icon"><i v-bind:class="[ 'fa', 'fa-' + iconname ]"></i></span>
+        {{ titletext }}
     </div>
 </template>
 
 <style lang="less" scoped>
 .banner {
-    opacity: 0.6;
+    opacity: var(--opacity);
     font-family: "TypoPRO Fira Sans";
     font-weight: bold;
     font-size: 100pt;
     padding-top: 80px;
-    background-color: #000000;
-    color: #ffffff;
+    background-color: var(--background);
+    color: var(--titlecolor);
     text-align: center;
     height: 240px;
     width: 1200px;
@@ -49,7 +49,7 @@
     transform: rotate(-45deg);
     transform-origin: top left;
     .icon {
-        color: #ff0000;
+        color: var(--iconcolor);
         padding-right: 20px;
     }
 }
@@ -59,11 +59,19 @@
 module.exports = {
     name: "banner",
     props: {
-        text: { type: String, default: "" },
+        opacity:    { type: Number, default: 1.0 },
+        background: { type: String, default: "" },
+        iconname:   { type: String, default: "" },
+        iconcolor:  { type: String, default: "" },
+        titletext:  { type: String, default: "" },
+        titlecolor: { type: String, default: "" },
     },
     data: () => ({
-        enabled: true
+        enabled: false
     }),
+    computed: {
+        style: HUDS.vueprop2cssvar()
+    },
     created () {
         this.$on("toggle", () => {
             this.enabled = !this.enabled

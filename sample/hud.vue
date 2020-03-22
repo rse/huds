@@ -46,7 +46,16 @@
             v-bind:todocolorbg="config.progress.todocolorbg"
             v-bind:todocolorfg="config.progress.todocolorfg"
         ></progress-bar>
-        <banner ref="banner" class="banner">PAUSE</banner>
+        <banner class="banner"
+            v-bind:opacity="config.banner.opacity"
+            v-bind:background="config.banner.background"
+            v-for="banner in config.banner.banner"
+            v-bind:ref="'banner-' + banner.name"
+            v-bind:iconname="banner.iconname"
+            v-bind:iconcolor="banner.iconcolor"
+            v-bind:titletext="banner.titletext"
+            v-bind:titlecolor="banner.titlecolor"
+        ></banner>
     </div>
 </template>
 
@@ -99,14 +108,16 @@ module.exports = {
         Mousetrap.bind("space", (e) => {
             huds.send(huds.id, "title.event=bounce")
         })
-        Mousetrap.bind("b", (e) => {
-            huds.send(huds.id, "banner.event=toggle")
-        })
-        huds.bind("banner", [ "event" ], (key, val) => {
-            let b = this.$refs.banner
-            if (val === "toggle")
-                b.$emit("toggle")
-        })
+        for (const banner of this.config.banner.banner) {
+            Mousetrap.bind(banner.key, (e) => {
+                huds.send(huds.id, `banner-${banner.name}.event=toggle`)
+            })
+            huds.bind(`banner-${banner.name}`, [ "event" ], (key, val) => {
+                let b = this.$refs[`banner-${banner.name}`][0]
+                if (val === "toggle")
+                    b.$emit("toggle")
+            })
+        }
         huds.bind("title", [ "event" ], (key, val) => {
             let tb = this.$refs.titleBar
             if (val === "bounce")
