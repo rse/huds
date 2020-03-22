@@ -27,7 +27,7 @@
 <template>
     <div class="hud">
         <i class="fa fa-eye"></i> Event: {{ event }}
-        <progress-bar ref="progressBar" class="progress" slots="10"></progress-bar>
+        <progress-bar ref="progressBar" class="progress" slots="15"></progress-bar>
     </div>
 </template>
 
@@ -43,7 +43,7 @@
         bottom: 20px;
         left: 20px;
         width: calc(100% - 40px);
-        height: 60px;
+        height: 100px;
         opacity: 0.8;
     }
 }

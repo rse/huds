@@ -34,6 +34,7 @@
 <style lang="less" scoped>
 .progress-bar {
     .svg {
+        border: 1px solid red;
         width: 100%;
         height: 100%;
     }
@@ -67,106 +68,75 @@ module.exports = {
     methods: {
         renderx () {
             let el = this.$refs.svg
-            let w = el.clientWidth
-            let h = el.clientHeight
-            let R = new Rune({
-                container: el,
-                width:  w,
-                height: h
-            })
-            this.R = R
-            let W = R.width
-            let H = R.height
+            let W = el.clientWidth
+            let H = el.clientHeight
+            let svg = SVG().addTo(el).size(W, H)
+            this.svg = svg
             this.box = []
+            let b = 20
+            let d = 4
+            let w = Math.floor((W - b * 2) / this.slots) - d
+            let h = H - b * 2
             for (let i = this.slots - 1; i >= 0; i--) {
-                let w = Math.floor(W / this.slots) - 4
-                let h = H
-                let x = i * (w + 4)
+                let x = i * (w + d)
                 let y = 0
                 let r = Math.floor(h * 0.15)
-                let g = R.group()
-
-                let p = R.path(0, 0)
-                    .moveTo(x + r, y)
-                    .lineTo(x + w - r, y)
+                let n = svg.nested().move(x, y).size(w + b * 2, h + b * 2)
+                let g = n.group()
+                let p = g.path().M(r, 0).L(w - r, 0)
                 if (i === this.slots - 1)
-                    p.curveTo(x + w, y, x + w, y + r)
-                    .lineTo(x + w, y + h - r)
-                    .curveTo(x + w, y + h, x + w - r, y + h)
+                    p.Q(w, 0, w, r).L(w, h - r).Q(w, h, w - r, h)
                 else
-                    p.curveTo(x + w, y + r/4, x + w, y + r)
-                    .lineTo(x + w + r, y + h/2)
-                    .lineTo(x + w, y + h - r)
-                    .curveTo(x + w, y + h - r/4, x + w - r, y + h)
-                p.lineTo(x + r, y + h)
+                    p.Q(w, r/4, w, r).L(w + r, h/2).L(w, h - r).Q(w, h - r/4, w - r, h)
+                p.L(r, h)
                 if (i === 0)
-                    p.curveTo(x, y + h, x, y + h - r)
-                    .lineTo(x, y + r)
-                    .curveTo(x, y, x + r, y)
+                    p.Q(0, h, 0, h - r).L(0, r).Q(0, 0, r, 0)
                 else
-                    p.curveTo(x, y + h, x, y + h - r)
-                    .lineTo(x + r, y + h/2)
-                    .lineTo(x, y + r)
-                    .curveTo(x, y, x + r, y)
-                p.closePath()
-                    .stroke(false)
-                let s = p.copy()
-                    .stroke(false)
-                    .fill("rgba(0,0,0,0.1)")
-                    .move(0, 0, true)
-                let t = R.text(i.toString(), x + w/2, y + h - h/3)
-                    .fontFamily("TypoPRO Fira Sans")
-                    .fontSize(h * 2/4)
-                    .textAlign("center")
-                    .stroke(false)
-                s.addTo(g)
-                p.addTo(g)
-                t.addTo(g)
-                this.box.unshift({ g, s, p, t })
+                    p.Q(0, h, 0, h - r).L(r, h/2).L(0, r).Q(0, 0, r, 0)
+                p.Z()
+                let t = g.text(i.toString())
+                    .font({ family: "TypoPRO Fira Sans", size: h * 0.75, anchor: "middle" })
+                p.move(b, b)
+                t.move(b, b)
+                t.center(b + w/2, b + h/2)
+                this.box.unshift({ n, g, p, t })
             }
             this.updatex()
-            R.draw()
         },
         updatex () {
-            let R = this.R
+            let svg = this.svg
             for (let i = this.slots - 1; i >= 0; i--) {
-                let { g, s, p, t } = this.box[i]
+                let { n, g, p, t } = this.box[i]
                 if (i < this.pos) {
                     p.fill("#6699cc")
                     t.fill("#f0f0ff")
-                        .fontWeight("normal")
+                        .font({ weight: "normal" })
                 }
                 else if (i === this.pos) {
+                    n.front()
                     p.fill("#336699")
                     t.fill("#ffffff")
-                        .fontWeight(900)
-                        console.log(g)
-                    /*
-                    let x = { x: 0 }
-                    anime({
-                        targets: x,
-                        x: [ 0, 1 ],
-                        delay: 1000,
+                        .font({ weight: 900 })
+                    anime.timeline({
+                        targets: g.node,
+                        duration: 400,
                         autoplay: true,
-                        loop: false,
-                        direction: "alternate",
-                        easing: "easeInOutSine",
-                        change: (anim) => {
-                            console.log(x.x)
-                            g.scale(1.01)
-                            g.changed()
-                            R.draw()
-                        }
+                        direction: "normal",
+                        easing: "easeInOutSine"
                     })
-                    */
+                    .add({ scaleX: 0.8, scaleY: 0.8, translateY: +12, translateX: +15, duration: 200 })
+                    .add({ scaleX: 1.2, scaleY: 1.2, translateY:  -9, translateX: -15 })
+                    .add({ scaleX: 1.0, scaleY: 1.0, translateY:   0, translateX:   0 })
+                    .add({ scaleX: 1.1, scaleY: 1.1, translateY:  -3, translateX: -10 })
+                    .add({ scaleX: 1.0, scaleY: 1.0, translateY:   0, translateX:   0, duration: 800 })
+                    .finished.then(() => {})
                 }
                 else {
                     p.fill("#f0f0f0")
                     t.fill("#cccccc")
-                        .fontWeight("normal")
+                        .font({ weight: "normal" })
                 }
             }
-            R.draw()
         }
     }
 }

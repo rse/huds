@@ -16,6 +16,11 @@
         "typopro-web":                     "4.2.3",
         "mousetrap":                       "1.6.5",
         "animejs":                         "3.1.0",
+        "@svgdotjs/svg.js":                "3.0.16",
+        "@svgdotjs/svg.filter.js":         "3.0.7",
+        "svg.easing.js":                   "2.0.0",
+        "svg.screenbbox.js":               "0.1.2",
+        "svg.path.js":                     "otm/svg.path.js#6981166",
         "runejs":                          "rse/runejs#1.1.8",
         "vivus":                           "0.4.5"
     }
