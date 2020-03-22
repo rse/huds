@@ -23,7 +23,7 @@ progress:
     todocolorfg:        "#999999"
 
 banner:
-    opacity:            0.70
+    opacity:            0.80
     background:         "#000000"
     banner:
         -   name:       pause
@@ -52,7 +52,7 @@ banner:
             titlecolor: "#ffffff"
 
 logo:
-    opacity:            0.70
+    opacity:            0.60
     svg: |
         <svg id="msg-logo" data-name="msg-logo 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 226.3 70.78">
             <defs><style>.cls-1{fill:#fff;}</style></defs>
