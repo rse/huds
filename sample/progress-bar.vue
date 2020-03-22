@@ -79,31 +79,45 @@ module.exports = {
             let H = R.height
             this.box = []
             for (let i = this.slots - 1; i >= 0; i--) {
-                let w = Math.floor(W / this.slots) - 1
+                let w = Math.floor(W / this.slots) - 4
                 let h = H
-                let x = i * w
+                let x = i * (w + 4)
                 let y = 0
                 let r = Math.floor(h * 0.15)
                 let g = R.group()
+
                 let p = R.path(0, 0)
-                    .moveTo(x, y)
+                    .moveTo(x + r, y)
                     .lineTo(x + w - r, y)
-                    .curveTo(x + w, y + r/4, x + w, y + r)
+                if (i === this.slots - 1)
+                    p.curveTo(x + w, y, x + w, y + r)
+                    .lineTo(x + w, y + h - r)
+                    .curveTo(x + w, y + h, x + w - r, y + h)
+                else
+                    p.curveTo(x + w, y + r/4, x + w, y + r)
                     .lineTo(x + w + r, y + h/2)
                     .lineTo(x + w, y + h - r)
                     .curveTo(x + w, y + h - r/4, x + w - r, y + h)
-                    .lineTo(x, y + h)
-                    .lineTo(x + r + 4, y + h/2)
-                    .lineTo(x, y)
-                    .closePath()
+                p.lineTo(x + r, y + h)
+                if (i === 0)
+                    p.curveTo(x, y + h, x, y + h - r)
+                    .lineTo(x, y + r)
+                    .curveTo(x, y, x + r, y)
+                else
+                    p.curveTo(x, y + h, x, y + h - r)
+                    .lineTo(x + r, y + h/2)
+                    .lineTo(x, y + r)
+                    .curveTo(x, y, x + r, y)
+                p.closePath()
                     .stroke(false)
                 let s = p.copy()
                     .stroke(false)
                     .fill("rgba(0,0,0,0.1)")
                     .move(0, 0, true)
-                let t = R.text(i.toString(), x + w/4, y + h - h/4)
-                    .fontFamily("Arial")
+                let t = R.text(i.toString(), x + w/2, y + h - h/3)
+                    .fontFamily("TypoPRO Fira Sans")
                     .fontSize(h * 2/4)
+                    .textAlign("center")
                     .stroke(false)
                 s.addTo(g)
                 p.addTo(g)
@@ -118,16 +132,38 @@ module.exports = {
             for (let i = this.slots - 1; i >= 0; i--) {
                 let { g, s, p, t } = this.box[i]
                 if (i < this.pos) {
-                    p.fill("#c0d0f0")
-                    t.fill("#90a0e0")
+                    p.fill("#6699cc")
+                    t.fill("#f0f0ff")
+                        .fontWeight("normal")
                 }
                 else if (i === this.pos) {
-                    p.fill("#6699cc")
+                    p.fill("#336699")
                     t.fill("#ffffff")
+                        .fontWeight(900)
+                        console.log(g)
+                    /*
+                    let x = { x: 0 }
+                    anime({
+                        targets: x,
+                        x: [ 0, 1 ],
+                        delay: 1000,
+                        autoplay: true,
+                        loop: false,
+                        direction: "alternate",
+                        easing: "easeInOutSine",
+                        change: (anim) => {
+                            console.log(x.x)
+                            g.scale(1.01)
+                            g.changed()
+                            R.draw()
+                        }
+                    })
+                    */
                 }
                 else {
                     p.fill("#f0f0f0")
                     t.fill("#cccccc")
+                        .fontWeight("normal")
                 }
             }
             R.draw()

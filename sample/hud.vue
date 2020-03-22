@@ -27,7 +27,7 @@
 <template>
     <div class="hud">
         <i class="fa fa-eye"></i> Event: {{ event }}
-        <progress-bar ref="progressBar" class="progress" slots="20"></progress-bar>
+        <progress-bar ref="progressBar" class="progress" slots="10"></progress-bar>
     </div>
 </template>
 
