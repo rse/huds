@@ -134,10 +134,17 @@ module.exports = {
                         this.banner = null
                     }
                     else {
-                        if (this.banner !== null)
+                        if (this.banner !== null) {
                             this.banner.$emit("toggle")
-                        b.$emit("toggle")
-                        this.banner = b
+                            setTimeout(() => {
+                                b.$emit("toggle")
+                                this.banner = b
+                            }, 1000)
+                        }
+                        else {
+                            b.$emit("toggle")
+                            this.banner = b
+                        }
                     }
                 }
             })

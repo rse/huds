@@ -86,7 +86,7 @@ module.exports = {
                 this.enabled = true
             anime.timeline({
                 targets:  el,
-                duration: 800,
+                duration: 500,
                 autoplay: true,
                 easing:   "easeInOutSine"
             })
