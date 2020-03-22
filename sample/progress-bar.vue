@@ -34,7 +34,6 @@
 <style lang="less" scoped>
 .progress-bar {
     .svg {
-        border: 1px solid red;
         width: 100%;
         height: 100%;
     }

@@ -27,7 +27,10 @@
 <template>
     <div class="hud">
         <i class="fa fa-eye"></i> Event: {{ event }}
-        <progress-bar ref="progressBar" class="progress" slots="15"></progress-bar>
+        <title-bar ref="titleBar" class="title"
+            person="Dr. Ralf S. Engelschall"
+            title="Grundlagen der IT-Architektur"></title-bar>
+        <progress-bar ref="progressBar" class="progress" slots="16"></progress-bar>
     </div>
 </template>
 
@@ -38,11 +41,18 @@
     position: relative;
     font-family: sans-serif;
     font-size: 22pt;
-    .progress {
+    > .title {
         position: absolute;
-        bottom: 20px;
-        left: 20px;
-        width: calc(100% - 40px);
+        right: 10px;
+        bottom: 10px;
+        width: calc(30%);
+        opacity: 0.8;
+    }
+    > .progress {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        width: calc(70%);
         height: 100px;
         opacity: 0.8;
     }
@@ -56,6 +66,7 @@ module.exports = {
         event: "test"
     }),
     components: {
+        "title-bar":    "url:title-bar.vue",
         "progress-bar": "url:progress-bar.vue"
     },
     created () {
@@ -68,6 +79,14 @@ module.exports = {
         })
         Mousetrap.bind("right", (e) => {
             huds.send(huds.id, "progress.event=next")
+        })
+        Mousetrap.bind("space", (e) => {
+            huds.send(huds.id, "title.event=bounce")
+        })
+        huds.bind("title", [ "event" ], (key, val) => {
+            let tb = this.$refs.titleBar
+            if (val === "bounce")
+                tb.$emit("bounce")
         })
         huds.bind("progress", [ "event" ], (key, val) => {
             let pb = this.$refs.progressBar
