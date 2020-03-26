@@ -27,8 +27,14 @@
 <template>
     <div v-show="enabled" v-bind:style="style" class="banner" ref="banner">
         <div class="bar" ref="bar">
-            <span class="icon"><i v-bind:class="[ 'fa', 'fa-' + iconname ]"></i></span>
-            {{ titletext }}
+            <div class="head">
+            </div>
+            <div class="body">
+                <span class="icon"><i v-bind:class="[ 'fa', 'fa-' + iconname ]"></i></span>
+                {{ titletext }}
+            </div>
+            <div class="foot">
+            </div>
         </div>
     </div>
 </template>
@@ -41,20 +47,32 @@
         font-family: "TypoPRO Fira Sans";
         font-weight: bold;
         font-size: 100pt;
-        padding-top: 80px;
-        background-color: var(--background);
-        color: var(--titlecolor);
-        text-align: center;
-        height: 240px;
-        width: 1200px;
-        position: absolute;
-        top: 600px;
-        left: -220px;
+        top: 550px;
+        left: -260px;
         transform: rotate(-45deg);
         transform-origin: top left;
-        .icon {
-            color: var(--iconcolor);
-            padding-right: 20px;
+        position: absolute;
+        .head {
+            background-color: var(--background);
+            height: 10px;
+            margin-bottom: 10px;
+        }
+        .body {
+            padding-top: 80px;
+            background-color: var(--background);
+            color: var(--titlecolor);
+            text-align: center;
+            height: 240px;
+            width: 1200px;
+            .icon {
+                color: var(--iconcolor);
+                padding-right: 10px;
+            }
+        }
+        .foot {
+            background-color: var(--background);
+            height: 10px;
+            margin-top: 10px;
         }
     }
 }
