@@ -102,14 +102,24 @@ module.exports = {
             let newstate = !oldstate
             if (!oldstate)
                 this.enabled = true
-            anime.timeline({
+            let tl = anime.timeline({
                 targets:  el,
-                duration: 500,
-                autoplay: true,
-                easing:   "easeInOutSine"
+                duration: 1000,
+                autoplay: true
             })
-            .add({ opacity: newstate ? 1.0 : 0.0 })
-            .finished.then(() => { this.enabled = newstate })
+            if (newstate)
+                tl.add({
+                    easing: "easeOutBounce",
+                    translateX: [ -400, 0.0 ],
+                    rotate: [ -45, -45 ],
+                    opacity: [ 1.0, 1.0 ]
+                })
+            else
+                tl.add({
+                    easing: "easeOutSine",
+                    opacity: [ 1.0, 0.0 ]
+                })
+            tl.finished.then(() => { this.enabled = newstate })
         })
     }
 }
