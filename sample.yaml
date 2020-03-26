@@ -3,7 +3,7 @@
 ##
 
 title:
-    opacity:            0.70
+    opacity:            0.80
     background:         "#336699"
     iconname:           graduation-cap
     iconcolor:          "#77aadd"
@@ -13,7 +13,7 @@ title:
     titlecolor:         "#ffffff"
 
 progress:
-    opacity:            0.70
+    opacity:            0.80
     slots:              16
     donecolorbg:        "#6699cc"
     donecolorfg:        "#f0f0ff"
