@@ -24,32 +24,32 @@ progress:
 
 banner:
     opacity:            0.80
-    background:         "#000000"
+    background:         "#f0f0f0"
     banner:
         -   name:       pause
             key:        p
             iconname:   pause-circle
-            iconcolor:  "#6699cc"
+            iconcolor:  "#336699"
             titletext:  PAUSE
-            titlecolor: "#ffffff"
+            titlecolor: "#000000"
         -   name:       rant
             key:        r
             iconname:   radiation-alt
-            iconcolor:  "#ff0000"
+            iconcolor:  "#bb0000"
             titletext:  RANT
-            titlecolor: "#ffffff"
+            titlecolor: "#000000"
         -   name:       hint
             key:        h
             iconname:   exclamation-circle
-            iconcolor:  "#ffdd00"
+            iconcolor:  "#cc9900"
             titletext:  HINT
-            titlecolor: "#ffffff"
+            titlecolor: "#000000"
         -   name:       qna
             key:        q
             iconname:   comments
-            iconcolor:  "#33cc00"
+            iconcolor:  "#339900"
             titletext:  "Q&A"
-            titlecolor: "#ffffff"
+            titlecolor: "#000000"
 
 logo:
     opacity:            0.60
