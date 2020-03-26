@@ -25,7 +25,7 @@
 -->
 
 <template>
-    <div class="hud">
+    <div v-bind:style="style" class="hud">
         <title-bar ref="titleBar" class="title"
             v-bind:opacity="config.title.opacity"
             v-bind:background="config.title.background"
@@ -64,6 +64,9 @@
 </template>
 
 <style lang="less" scoped>
+body {
+    background-color: var(--background);
+}
 .hud {
     width: 100vw;
     height: 100vh;
@@ -102,6 +105,13 @@ module.exports = {
         banner: null,
         logo: null
     }),
+    computed: {
+        style: () => {
+            return {
+                background: huds.options.debug ? "#999999" : "transparent"
+            }
+        }
+    },
     components: {
         "banner":       "url:banner.vue",
         "title-bar":    "url:title-bar.vue",
