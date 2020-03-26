@@ -42,6 +42,20 @@ class HUDS extends EventEmitter {
         url += "event"
         this.url = url
 
+        /*  determine options  */
+        this.options = {}
+        if (document.location.hash) {
+            document.location.hash.replace(/^#/, "").split(/,/).forEach((param) => {
+                const m = param.match(/^(.+?)=(.*)$/)
+                if (m !== null) {
+                    const [ , key, val ] = m
+                    this.options[key] = val
+                }
+                else
+                    this.options[param] = true
+            })
+        }
+
         /*  determine own HUD id  */
         const m = document.location.pathname.match(/([^/]+)\/$/)
         this.id = m[1]
