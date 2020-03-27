@@ -90,13 +90,17 @@ module.exports = {
         titlecolor: { type: String, default: "" },
     },
     data: () => ({
-        enabled: false
+        enabled:  false,
+        progress: false
     }),
     computed: {
         style: HUDS.vueprop2cssvar()
     },
     created () {
         this.$on("toggle", () => {
+            if (this.progress)
+                return
+            this.progress = true
             let el = this.$refs.bar
             let oldstate = this.enabled
             let newstate = !oldstate
@@ -107,19 +111,24 @@ module.exports = {
                 duration: 1000,
                 autoplay: true
             })
-            if (newstate)
+            if (newstate) {
                 tl.add({
-                    easing: "easeOutBounce",
+                    easing:     "easeOutBounce",
                     translateX: [ -400, 0.0 ],
-                    rotate: [ -45, -45 ],
-                    opacity: [ 1.0, 1.0 ]
+                    rotate:     [ -45, -45 ],
+                    opacity:    [ 1.0, 1.0 ]
                 })
-            else
+            }
+            else {
                 tl.add({
-                    easing: "easeOutSine",
-                    opacity: [ 1.0, 0.0 ]
+                    easing:     "easeOutSine",
+                    opacity:    [ 1.0, 0.0 ]
                 })
-            tl.finished.then(() => { this.enabled = newstate })
+            }
+            tl.finished.then(() => {
+                this.enabled  = newstate
+                this.progress = false
+            })
         })
     }
 }

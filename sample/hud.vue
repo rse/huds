@@ -132,29 +132,45 @@ module.exports = {
         Mousetrap.bind("space", (e) => {
             huds.send(huds.id, "title.event=bounce")
         })
+        let progress = false
         for (const banner of this.config.banner.banner) {
             Mousetrap.bind(banner.key, (e) => {
                 huds.send(huds.id, `banner-${banner.name}.event=toggle`)
             })
             huds.bind(`banner-${banner.name}`, [ "event" ], (key, val) => {
                 if (val === "toggle") {
+                    if (progress)
+                        return
                     let b = this.$refs[`banner-${banner.name}`][0]
                     if (this.banner === b) {
+                        /*  disable ourself  */
+                        progress = true
                         this.banner.$emit("toggle")
-                        this.banner = null
+                        setTimeout(() => {
+                            this.banner = null
+                            progress = false
+                        }, 1000)
+                    }
+                    else if (this.banner !== null) {
+                        /*  disable foreign, then enable ourself  */
+                        progress = true
+                        this.banner.$emit("toggle")
+                        setTimeout(() => {
+                            b.$emit("toggle")
+                            setTimeout(() => {
+                                this.banner = b
+                                progress = false
+                            }, 1000)
+                        }, 1000)
                     }
                     else {
-                        if (this.banner !== null) {
-                            this.banner.$emit("toggle")
-                            setTimeout(() => {
-                                b.$emit("toggle")
-                                this.banner = b
-                            }, 1000)
-                        }
-                        else {
-                            b.$emit("toggle")
+                        /*  enable ourself  */
+                        progress = true
+                        b.$emit("toggle")
+                        setTimeout(() => {
                             this.banner = b
-                        }
+                            progress = false
+                        }, 1000)
                     }
                 }
             })
