@@ -47,7 +47,7 @@ const my            = require("../package.json")
             "[-l|--log-file <log-file>] [-v|--log-level <log-level>] " +
             "[-a <address>] [-p <port>] " +
             "[-U <username>] [-P <password>] " +
-            "[-d <hud-id>:<hud-directory>]"
+            "[-d <hud-id>:<hud-directory>[,<hud-config-file>]]"
         )
         .help("h").alias("h", "help").default("h", false)
             .describe("h", "show usage help")
