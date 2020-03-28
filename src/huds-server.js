@@ -97,6 +97,21 @@ const my            = require("../package.json")
     reduce("P", "password")
 
     /*  process HUD definitions  */
+    const resolvePathname = async (pathname) => {
+        let stat = await fs.promises.stat(pathname).catch(() => null)
+        let m
+        if (stat === null && (m = pathname.match(/^@(.+)$/)) !== null) {
+            try {
+                pathname = require.resolve(`${m[1]}/package.json`)
+                pathname = path.dirname(pathname)
+                stat = await fs.promises.stat(pathname).catch(() => null)
+            }
+            catch (err) {
+                stat = null
+            }
+        }
+        return { stat, pathname }
+    }
     const HUD = {}
     if (argv.define.length === 0)
         throw new Error("no HUDs defined")
@@ -107,22 +122,22 @@ const my            = require("../package.json")
         const [ , id, dir, config ] = m
         if (HUD[id] !== undefined)
             throw new Error(`HUD "${id}" already defined`)
-        const stat = await fs.promises.stat(dir).catch(() => null)
+        const { stat, pathname: dirResolved } = await resolvePathname(dir)
         if (stat === null)
-            throw new Error(`HUD path "${dir}" not found`)
+            throw new Error(`HUD "${id}": base path "${dir}" not found`)
         if (!stat.isDirectory())
-            throw new Error(`HUD path "${dir}" is not a directory`)
+            throw new Error(`HUD "${id}": base path "${dir}" not a directory`)
         let data = {}
         if (config) {
-            const stat = await fs.promises.stat(config).catch(() => null)
+            const { stat, pathname: configResolved } = await resolvePathname(config)
             if (stat === null)
-                throw new Error(`HUD config path "${config}" not found`)
+                throw new Error(`HUD "${id}": config path "${config}" not found`)
             if (!stat.isFile())
-                throw new Error(`HUD config path "${config}" is not a file`)
-            const yaml = await fs.promises.readFile(config, { encoding: "utf8" })
+                throw new Error(`HUD "${id}": config path "${config}" is not a file`)
+            const yaml = await fs.promises.readFile(configResolved, { encoding: "utf8" })
             data = jsYAML.safeLoad(yaml)
         }
-        HUD[id] = { dir, data }
+        HUD[id] = { dir: dirResolved, data }
     }
 
     /*  log messages  */
@@ -404,7 +419,7 @@ const my            = require("../package.json")
     await server.start()
 })().catch((err) => {
     /*  fatal error handling  */
-    process.stderr.write(`huds: ERROR: ${err.stack}\n`)
+    process.stderr.write(`huds: ERROR: ${err.message}\n`)
     process.exit(1)
 })
 
