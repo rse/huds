@@ -14,16 +14,16 @@ Abstract
 --------
 
 HUDS is a small server providing a
-Web service for serving one or more HTML single page applications
-which act as Head-Up-Displays (HUD) or Overlays in video
-productions. It is specially intended to be used with [OBS Studio](https://obsproject.com/)'s
+Web service for serving one or more HTML Single-Page Applications (SPA)
+which act as "Head-Up-Displays (HUD)" or "Overlays" in video
+production scenarios. It is specially intended to be used with [OBS Studio](https://obsproject.com/)'s
 [CEF](https://en.wikipedia.org/wiki/Chromium_Embedded_Framework)-based
 [Browser Source](https://obsproject.com/wiki/Sources-Guide#browsersource)
 and optionally the [Elgato Stream Deck](https://www.elgato.com/en/gaming/stream-deck)
 remote control device and its [System:Website](https://help.elgato.com/hc/en-us/articles/360028234471-Elgato-Stream-Deck-System-Actions) function.
 
 HUDS serves the static files of one or more HUD HTML5 SPAs, which
-render the HUD display in OBS. It also provides a HUDS client API to
+render the actual HUD display in OBS. It also provides a HUDS client API to
 each HUD HTML5 SPA for establishing a WebSocket connection back to HUDS.
 Over this WebSocket connection HUDS pushes events to each HUD which were
 received by HUDS either via WebSocket connections or REST endpoints.
@@ -42,8 +42,10 @@ Usage
 -----
 
 ```
-$ huds -a 127.0.0.1 -p 9999 -U sample -P sample -d sample:./sample
+$ huds -a 127.0.0.1 -p 9999 -U sample -P sample -d sample:./sample,./sample.yaml
 ```
+
+![stmux usage](sample.jpg)
 
 License
 -------
