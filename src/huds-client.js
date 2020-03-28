@@ -142,6 +142,17 @@ class HUDS extends EventEmitter {
             return HUDS._config
     }
 
+    /*  convert HUDS config to VueJS properties  */
+    config2vueprop (id, vue) {
+        const config = this.config()
+        if (typeof config[id] === "object") {
+            for (const key of Object.keys(vue.$props)) {
+                if (config[id][key] !== undefined)
+                    vue[key] = config[id][key]
+            }
+        }
+    }
+
     /*  convert VueJS properties to CSS variables  */
     static vueprop2cssvar () {
         return function () {
