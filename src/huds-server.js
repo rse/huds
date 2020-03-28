@@ -96,6 +96,36 @@ const my            = require("../package.json")
     reduce("U", "username")
     reduce("P", "password")
 
+    /*  log messages  */
+    const levels = [
+        { name: "ERROR",   style: chalk.red.bold },
+        { name: "WARNING", style: chalk.yellow.bold },
+        { name: "INFO",    style: chalk.blue },
+        { name: "DEBUG",   style: chalk.green }
+    ]
+    if (argv.logLevel >= levels.length)
+        throw new Error("invalid maximum verbose level")
+    let stream = null
+    if (argv.logFile === "-")
+        stream = process.stdout
+    else if (argv.logFile !== "")
+        stream = fs.createWriteStream(argv.logFile, { flags: "a", encoding: "utf8" })
+    const log = (level, msg) => {
+        if (level <= argv.logLevel) {
+            const timestamp = moment().format("YYYY-MM-DD hh:mm:ss.SSS")
+            let line = `[${timestamp}]: `
+            if (stream.isTTY)
+                line += `${levels[level].style("[" + levels[level].name + "]")}`
+            else
+                line += `[${levels[level].name}]`
+            line += `: ${msg}\n`
+            stream.write(line)
+        }
+    }
+
+    /*  show startup message  */
+    log(2, `starting Head-Up-Display Server (HUDS) ${my.version}`)
+
     /*  process HUD definitions  */
     const resolvePathname = async (pathname) => {
         let stat = await fs.promises.stat(pathname).catch(() => null)
@@ -127,6 +157,7 @@ const my            = require("../package.json")
             throw new Error(`HUD "${id}": base path "${dir}" not found`)
         if (!stat.isDirectory())
             throw new Error(`HUD "${id}": base path "${dir}" not a directory`)
+        log(2, `HUD definition: [${id}]: using base directory "${dirResolved}"`)
         let data = {}
         if (config) {
             const { stat, pathname: configResolved } = await resolvePathname(config)
@@ -134,41 +165,14 @@ const my            = require("../package.json")
                 throw new Error(`HUD "${id}": config path "${config}" not found`)
             if (!stat.isFile())
                 throw new Error(`HUD "${id}": config path "${config}" is not a file`)
+            log(2, `HUD definition: [${id}]: using configuration file "${configResolved}"`)
             const yaml = await fs.promises.readFile(configResolved, { encoding: "utf8" })
             data = jsYAML.safeLoad(yaml)
         }
         HUD[id] = { dir: dirResolved, data }
     }
 
-    /*  log messages  */
-    const levels = [
-        { name: "ERROR",   style: chalk.red.bold },
-        { name: "WARNING", style: chalk.yellow.bold },
-        { name: "INFO",    style: chalk.blue },
-        { name: "DEBUG",   style: chalk.green }
-    ]
-    if (argv.logLevel >= levels.length)
-        throw new Error("invalid maximum verbose level")
-    let stream = null
-    if (argv.logFile === "-")
-        stream = process.stdout
-    else if (argv.logFile !== "")
-        stream = fs.createWriteStream(argv.logFile, { flags: "a", encoding: "utf8" })
-    const log = (level, msg) => {
-        if (level <= argv.logLevel) {
-            const timestamp = moment().format("YYYY-MM-DD hh:mm:ss.SSS")
-            let line = `[${timestamp}]: `
-            if (stream.isTTY)
-                line += `${levels[level].style("[" + levels[level].name + "]")}`
-            else
-                line += `[${levels[level].name}]`
-            line += `: ${msg}\n`
-            stream.write(line)
-        }
-    }
-
     /*  establish REST server  */
-    log(2, `starting Head-Up-Display Server (HUDS) ${my.version}`)
     log(2, `listening to http://${argv.address}:${argv.port}`)
     const server = HAPI.server({
         host:  argv.address,
