@@ -36,11 +36,6 @@ Studio](https://obsproject.com/) (under `localhost`) but also can be
 deployed to a dedicated server by optionally requiring authentication
 and delivering one or more HUDs in parallel.
 
-Architecture
-------------
-
-![architecture](architecture.svg)
-
 Installation
 ------------
 
@@ -74,6 +69,45 @@ HUD](https://github.com/rse/huds-hud-training/). It supports performing
 trainings as webinars and looks like this in practice:
 
 ![screenshot](screenshot.jpg)
+
+Architecture
+------------
+
+![architecture](architecture.svg)
+
+1.  HUDS reads the Training HUD Configuration and converts its content from
+    YAML to JSON format for embedding into the HUDS (Client) Library.
+
+2.  OBS Studio's CEF-based Browser Source open the URL
+    `http://127.0.0.1:9999/<hud-id>/`
+
+3.  HUDS delivers the HUD SPA with all its HTML/CSS/JS files.
+    The individual assets are served via
+    the HUDS URLs `http://127.0.0.1:9999/<hud-id>/<asset>`.
+
+4.  The HUD SPA (in its `index.html`) references the HUDS (Client) Library with:
+    `<script type="text/javascript" src="huds"></script>`.
+
+5.  HUDS delivers the HUDS (Client) Library (and its embedded HUD configuration)
+    under virtual HUDS URL `http://127.0.0.1:9999/<hud-id>/huds`.
+
+6.  The HUDS (Client) Library opens a WebSocket connection back to HUDS
+    under the HUDS URL `http://127.0.0.1:9999/<hud-id>/event`.
+
+7.  An external program (like Elgato Stream Deck's System:Website
+    function or Node-RED's HTTP-Request or just cURL) triggers an event
+    under the HUDS URL `http://127.0.0.1:9999/<hud-id>/event/<event-name>=<event-value>`.
+
+8.  HUDS forwards the received event to all instances of the HUD by
+    sending out the event to all HUD SPAs over their WebSocket
+    connections. Notice: a single HUD can be opened multiple times and
+    then all opened instances receive the event. This is useful to run a
+    HUD both in OBS Studio and in parallel in the browser on a control
+    notebook in case no dedicated Elgato Streak Deck remote control device is used.
+
+9.  Similary, even HUD SPAs are allowed to send events (to theirself or other
+    HUDs) over their WebSocket connection. This is useful to have a central
+    dashboard HUD which controls one or more actual video HUDs.
 
 License
 -------
