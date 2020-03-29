@@ -73,32 +73,43 @@ trainings as webinars and looks like this in practice:
 Architecture
 ------------
 
+HUDS is based on a Client/Server architecture as illustrated in the
+following diagram:
+
 ![architecture](architecture.svg)
 
-1.  HUDS reads the Training HUD Configuration and converts its content from
+The individual communication steps in the diagram are:
+
+1.  [HUDS](src/huds-server.js) reads the HUD configuration and converts its content from
     YAML to JSON format for embedding into the HUDS (Client) Library.
+    See [training.yaml](https://github.com/rse/huds-hud-training/blob/master/training.yaml)
+    for an example of a HUD configuration.
 
 2.  OBS Studio's CEF-based Browser Source open the URL
     `http://127.0.0.1:9999/<hud-id>/`
 
-3.  HUDS delivers the HUD SPA with all its HTML/CSS/JS files.
+3.  [HUDS](src/huds-server.js) delivers the HUD SPA with all its HTML/CSS/JS files.
     The individual assets are served via
     the HUDS URLs `http://127.0.0.1:9999/<hud-id>/<asset>`.
+    See [Hello World HUD](https://github.com/rse/huds-hud-hello/)
+    for an example of a simple HUD and
+    [Training HUD](https://github.com/rse/huds-hud-training/)
+    for an example of a more elaborated HUD.
 
-4.  The HUD SPA (in its `index.html`) references the HUDS (Client) Library with:
+4.  The HUD SPA (in its `index.html`) references the [HUDS (Client) Library](src/huds-client.js) with:
     `<script type="text/javascript" src="huds"></script>`.
 
-5.  HUDS delivers the HUDS (Client) Library (and its embedded HUD configuration)
+5.  [HUDS](src/huds-server.js) delivers the [HUDS (Client) Library](src/huds-client.js) (and its embedded HUD configuration)
     under virtual HUDS URL `http://127.0.0.1:9999/<hud-id>/huds`.
 
-6.  The HUDS (Client) Library opens a WebSocket connection back to HUDS
+6.  The [HUDS (Client) Library](src/huds-client.js) opens a WebSocket connection back to [HUDS](src/huds-server.js)
     under the HUDS URL `http://127.0.0.1:9999/<hud-id>/event`.
 
 7.  An external program (like Elgato Stream Deck's System:Website
     function or Node-RED's HTTP-Request or just cURL) triggers an event
     under the HUDS URL `http://127.0.0.1:9999/<hud-id>/event/<event-name>=<event-value>`.
 
-8.  HUDS forwards the received event to all instances of the HUD by
+8.  [HUDS](src/huds-server.js) forwards the received event to all instances of the HUD by
     sending out the event to all HUD SPAs over their WebSocket
     connections. Notice: a single HUD can be opened multiple times and
     then all opened instances receive the event. This is useful to run a
