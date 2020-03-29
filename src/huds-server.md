@@ -51,9 +51,11 @@ The following options exist:
 
 ## EXAMPLE
 
+```sh
 $ git clone https://github.com/rse/huds-hud-hello
 $ cd huds-hud-hello
 $ huds -a 127.0.0.1 -p 9999 -U hello -P hello -d hello:.,hello.yaml
+```
 
 ## HISTORY
 
