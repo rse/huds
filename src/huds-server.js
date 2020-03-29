@@ -56,7 +56,7 @@ const my            = require("../package.json")
             .describe("V", "show version information")
         .string("l").nargs("l", 1).alias("l", "log-file").default("l", "-")
             .describe("l", "file for verbose logging")
-        .number("v").nargs("v", 1).alias("v", "log-level").default("v", 3)
+        .number("v").nargs("v", 1).alias("v", "log-level").default("v", 2)
             .describe("v", "level for verbose logging (0-3)")
         .string("a").nargs("a", 1).alias("a", "address").default("a", "127.0.0.1")
             .describe("a", "IP address of service")
@@ -223,9 +223,9 @@ const my            = require("../package.json")
     })
     server.events.on({ name: "request", channels: [ "error" ] }, (request, event, tags) => {
         if (event.error instanceof Error)
-            log(0, `HAPI: request-error: ${event.error.message}`)
+            log(1, `HAPI: request-error: ${event.error.message}`)
         else
-            log(0, `HAPI: request-error: ${event.error}`)
+            log(1, `HAPI: request-error: ${event.error}`)
     })
     server.events.on("log", (event, tags) => {
         if (tags.error) {
