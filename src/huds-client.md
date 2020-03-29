@@ -53,7 +53,7 @@
 
 ## HISTORY
 
-The `huds`(1) server was developed in March 2020 for being able
+HUDS was developed in March 2020 for being able
 to easily create Head-Up-Displays (HUDs) for *OBS Studio*.
 
 ## AUTHOR
