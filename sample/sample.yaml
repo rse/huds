@@ -1,0 +1,6 @@
+
+hello:
+    background: "#f0f0f0"
+    foreground: "#666666"
+    text:       "Hello World!"
+

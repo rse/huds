@@ -50,6 +50,6 @@
     "scripts": {
         "prepublishOnly":             "grunt default",
         "build":                      "grunt default",
-        "start":                      "node src/huds-server.js -U sample -P sample -d sample:./sample,./sample.yaml"
+        "start":                      "node src/huds-server.js -a 0.0.0.0 -p 9999 -U sample -P sample -d sample:sample,sample/sample.yaml"
     }
 }

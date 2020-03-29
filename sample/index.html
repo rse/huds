@@ -1,29 +1,4 @@
 <!DOCTYPE html>
-<!--
-/*
-**  HUDS ~~ Head-Up-Display Server (HUDS)
-**  Copyright (c) 2020 Dr. Ralf S. Engelschall <rse@engelschall.com>
-**
-**  Permission is hereby granted, free of charge, to any person obtaining
-**  a copy of this software and associated documentation files (the
-**  "Software"), to deal in the Software without restriction, including
-**  without limitation the rights to use, copy, modify, merge, publish,
-**  distribute, sublicense, and/or sell copies of the Software, and to
-**  permit persons to whom the Software is furnished to do so, subject to
-**  the following conditions:
-**
-**  The above copyright notice and this permission notice shall be included
-**  in all copies or substantial portions of the Software.
-**
-**  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-**  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-**  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-**  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-**  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-**  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-**  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
--->
 <html>
     <head>
         <title>HUD</title>
@@ -35,48 +10,20 @@
         <script type="text/javascript" src="node_modules/http-vue-loader/src/httpVueLoader.js"></script>
         <script type="text/javascript" src="node_modules/mousetrap/mousetrap.min.js"></script>
         <script type="text/javascript" src="node_modules/animejs/lib/anime.min.js"></script>
-        <script type="text/javascript" src="node_modules/vivus/dist/vivus.min.js"></script>
-        <script>less = { env: "production", logLevel: 0 };</script>
-        <script type="text/javascript" src="node_modules/less/dist/less.min.js"></script>
-        <script type="text/javascript" src="node_modules/runejs/rune.js"></script>
-        <script type="text/javascript" src="node_modules/@svgdotjs/svg.js/dist/svg.min.js"></script>
-        <script type="text/javascript" src="node_modules/@svgdotjs/svg.filter.js/dist/svg.filter.min.js"></script>
-        <script type="text/javascript" src="node_modules/svg.path.js/svg.path.js"></script>
-        <script type="text/javascript" src="node_modules/svg.easing.js/dist/svg.easing.min.js"></script>
-        <script type="text/javascript" src="node_modules/svg.screenbbox.js/dist/svg.screenbbox.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="node_modules/@fortawesome/fontawesome-free/css/all.min.css">
-        <script type="text/javascript" src="node_modules/@fortawesome/fontawesome-free/js/all.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="node_modules/typopro-web/web/TypoPRO-SourceSansPro/TypoPRO-SourceSansPro.css">
-        <link rel="stylesheet" type="text/css" href="node_modules/typopro-web/web/TypoPRO-FiraSans/TypoPRO-FiraSans.css">
     </head>
     <body>
-        <div id="hud">
-            <hud></hud>
+        <div id="hello">
+            <hello background="yellow"></hello>
         </div>
         <style type="text/css">
-            html {
-                margin:   0;
-                padding:  0;
-            }
-            body {
-                margin:   0;
-                padding:  0;
-                width:    100vw;
-                height:   100vh;
-                position: relative;
-            }
+            html { margin: 0; padding: 0; }
+            body { margin: 0; padding: 0; width: 100vw; height: 100vh; position: relative; }
         </style>
         <script>
             huds = new HUDS()
-            httpVueLoader.langProcessor.less = (lessText) =>
-                less.render(lessText, { globalVars: huds.config({ flat: true, sep: "-" }) }).then((result) => result.css)
-            Vue.use(httpVueLoader)
-            vm = new Vue({ el: "#hud", components: { "hud": "url:hud.vue" }})
-            huds.on("open",    ()        => { console.log("HUDS: WebSocket: open") })
-            huds.on("close",   ()        => { console.log("HUDS: WebSocket: close") })
-            huds.on("receive", (message) => { console.log("HUDS: WebSocket: receive", JSON.stringify(message)) })
-            huds.on("error",   (error)   => { console.log("HUDS: WebSocket: error", error) })
             huds.connect()
+            Vue.use(httpVueLoader)
+            vm = new Vue({ el: "#hello", components: { "hello": "url:hello.vue" }})
         </script>
     </body>
 </html>
