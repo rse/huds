@@ -63,7 +63,7 @@ For a more elaborated HUD check out the [Training
 HUD](https://github.com/rse/huds-hud-training/). It supports performing
 trainings as webinars and looks like this in practice:
 
-![screenshot](screenshot.png)
+![screenshot](screenshot.jpg)
 
 License
 -------
