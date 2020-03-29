@@ -35,6 +35,7 @@ const HAPIHeader    = require("hapi-plugin-header")
 const yargs         = require("yargs")
 const chalk         = require("chalk")
 const moment        = require("moment")
+const resolve       = require("resolve")
 const jsYAML        = require("js-yaml")
 const my            = require("../package.json")
 
@@ -97,6 +98,10 @@ const my            = require("../package.json")
     reduce("U", "username")
     reduce("P", "password")
 
+    /*  sanity check usage  */
+    if (argv.define.length === 0)
+        throw new Error("no HUDs defined")
+
     /*  log messages  */
     const levels = [
         { name: "ERROR",   style: chalk.red.bold },
@@ -129,23 +134,21 @@ const my            = require("../package.json")
 
     /*  process HUD definitions  */
     const resolvePathname = async (pathname) => {
-        let stat = await fs.promises.stat(pathname).catch(() => null)
         let m
-        if (stat === null && (m = pathname.match(/^@(.+)$/)) !== null) {
+        let stat = null
+        if ((m = pathname.match(/^@(.+)$/))) {
             try {
-                pathname = require.resolve(`${m[1]}/package.json`)
-                pathname = path.dirname(pathname)
-                stat = await fs.promises.stat(pathname).catch(() => null)
+                pathname = require.resolve(m[1])
             }
             catch (err) {
-                stat = null
+                pathname = null
             }
         }
+        if (pathname !== null)
+            stat = await fs.promises.stat(pathname).catch(() => null)
         return { stat, pathname }
     }
     const HUD = {}
-    if (argv.define.length === 0)
-        throw new Error("no HUDs defined")
     for (const spec of argv.define) {
         const m = spec.match(/^(.+?):(.+?)(?:,(.+))?$/)
         if (m === null)
@@ -293,17 +296,55 @@ const my            = require("../package.json")
             log(3, `HAPI: receive: remote=${req.info.remoteAddress}, id=${id}, file="${file}"`)
             if (HUD[id] === undefined)
                 return h.response().code(404)
+
+            /*  handle special files  */
             if (file === "huds")
                 return h.file(path.join(__dirname, "../dst/huds-client.js"), { confine: false })
             if (file === "")
                 file = "index.html"
-            const filepath = path.join(HUD[id].dir, file)
-            const stat = await fs.promises.stat(path.join(HUD[id].dir, file)).catch(() => null)
-            if (stat === null)
-                return h.response().code(404)
-            if (!stat.isFile())
-                return h.response().code(404)
-            return h.file(filepath, { confine: false })
+
+            /*  serve file from NPM package or from the HUD directory  */
+            let m
+            if ((m = file.match(/^@(.+)$/))) {
+                file = m[1]
+
+                /*  try to serve file from NPM package, relative to HUD directory
+                    (this is the standard case)  */
+                let resolved = await new Promise((provide) => {
+                    resolve(file, { basedir: HUD[id].dir }, (err, res) => {
+                        if (err) provide(null)
+                        else     provide(res)
+                    })
+                })
+                if (resolve === null) {
+                    /*  try to serve file from NPM package, relative to HUDS perspective
+                        (this is necessary if a HUD is installed with its own dependencies side-by-side)  */
+                    try {
+                        resolved = require.resolve(file)
+                    }
+                    catch (err) {
+                        resolved = null
+                    }
+                }
+                if (resolved === null)
+                    return h.response().code(404)
+                const stat = await fs.promises.stat(resolved).catch(() => null)
+                if (stat === null)
+                    return h.response().code(404)
+                if (!stat.isFile())
+                    return h.response().code(404)
+                return h.file(resolved, { confine: false })
+            }
+            else {
+                /*  serve file from HUD directory  */
+                file = path.join(HUD[id].dir, file)
+                const stat = await fs.promises.stat(file).catch(() => null)
+                if (stat === null)
+                    return h.response().code(404)
+                if (!stat.isFile())
+                    return h.response().code(404)
+                return h.file(file, { confine: HUD[id].dir })
+            }
         }
     })
 
