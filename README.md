@@ -44,9 +44,9 @@ Usage
 -----
 
 The Unix manual pages
-[huds(8)]](https://github.com/rse/huds/blob/master/src/huds-server.md)
+[huds(8)](https://github.com/rse/huds/blob/master/src/huds-server.md)
 (for the server CLI) and
-[huds(3)]](https://github.com/rse/huds/blob/master/src/huds-client.md)
+[huds(3)](https://github.com/rse/huds/blob/master/src/huds-client.md)
 (for the client API) provide detailed usage information.
 
 Example
