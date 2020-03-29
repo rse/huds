@@ -59,6 +59,12 @@ $ npm install -g huds huds-hud-hello
 $ huds -a 127.0.0.1 -p 9999 -U hello -P hello -d hello:@huds-hud-hello
 ```
 
+For a more elaborated HUD check out the [Training
+HUD](https://github.com/rse/huds-hud-training/). It supports performing
+trainings as webinars and looks like this in practice:
+
+![screenshot](screenshot.png)
+
 License
 -------
 
