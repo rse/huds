@@ -31,6 +31,16 @@ The REST endpoint is intended to be used by arbitrary Web clients to
 send events to any HUD. Usually, this is used with the Stream Deck
 System:Website plugin or with curl(1) on the command-line.
 
+HUDS itself is usually run ad-hoc and side-by-side to [OBS
+Studio](https://obsproject.com/) (under `localhost`) but also can be
+deployed to a dedicated server by optionally requiring authentication
+and delivering one or more HUDs in parallel.
+
+Architecture
+------------
+
+![architecture](architecture.svg)
+
 Installation
 ------------
 

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="240 50 647 640" width="647" height="640">
+  <defs>
+    <font-face font-family="Myriad Pro" font-size="16" panose-1="2 11 5 3 3 4 3 2 2 4" units-per-em="1000" underline-position="-75" underline-thickness="50" slope="0" x-height="484" cap-height="674" ascent="750.0015" descent="-250.0005" font-weight="400">
+      <font-face-src>
+        <font-face-name name="MyriadPro-Regular"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -3 7 6" markerWidth="7" markerHeight="6" color="black">
+      <g>
+        <path d="M 4.8 0 L 0 -1.8 L 0 1.8 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.14.1 
+    <dc:date>2020-03-29 10:20:52 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" stroke-opacity="1" stroke-dasharray="none" fill="none" fill-opacity="1" stroke="none">
+    <title>Canvas 1</title>
+    <rect fill="white" x="240" y="50" width="647" height="640"/>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_2">
+        <rect x="240.5625" y="51" width="390.25" height="206.5" fill="#c0dbf5"/>
+        <rect x="240.5625" y="51" width="390.25" height="206.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(245.5625 56)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="152.885" y="12">OBS Studio</tspan>
+        </text>
+      </g>
+      <g id="Graphic_3">
+        <rect x="257.625" y="81" width="356.125" height="161" fill="#7db4ea"/>
+        <rect x="257.625" y="81" width="356.125" height="161" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(262.625 86)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="103.0385" y="12">Browser Source (CEF)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_4">
+        <rect x="288.5" y="144.5" width="136" height="47.5" fill="#f5dbc1"/>
+        <rect x="288.5" y="144.5" width="136" height="47.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(293.5 149.05)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="33.16" y="12">HUD SPA</tspan>
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="14.136" y="31.200006">(HTML/CSS/JS)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_5">
+        <rect x="288.5" y="641.5" width="136" height="47.5" fill="#f5dbc1"/>
+        <rect x="288.5" y="641.5" width="136" height="47.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(293.5 646.05)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="33.16" y="12">HUD SPA</tspan>
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="14.136" y="31.200006">(HTML/CSS/JS)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_6">
+        <rect x="479.5" y="639.5" width="101" height="47.5" fill="#f5dbc1"/>
+        <rect x="479.5" y="639.5" width="101" height="47.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(484.5 644.05)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="6.044" y="12">HUD Config</tspan>
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="21.876" y="31.200006">(YAML)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_7">
+        <rect x="240.5625" y="321.375" width="645.6875" height="294.25" fill="#c0dbf5"/>
+        <rect x="240.5625" y="321.375" width="645.6875" height="294.25" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(245.5625 591.425)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="596.3595" y="12">HUDS</tspan>
+        </text>
+      </g>
+      <g id="Graphic_8">
+        <rect x="653.5" y="51" width="232.75" height="206.5" fill="#c0dbf5"/>
+        <rect x="653.5" y="51" width="232.75" height="206.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(658.5 56)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="46.527" y="12">Elgato Stream Deck</tspan>
+        </text>
+      </g>
+      <g id="Graphic_9">
+        <rect x="674" y="81" width="191.75" height="161" fill="#7db4ea"/>
+        <rect x="674" y="81" width="191.75" height="161" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(679 86)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="38.459" y="12">System:Website</tspan>
+        </text>
+      </g>
+      <g id="Graphic_10">
+        <rect x="701.875" y="144.5" width="136" height="47.5" fill="#f5dbc1"/>
+        <rect x="701.875" y="144.5" width="136" height="47.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(706.875 149.05)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="33.472" y="12">HUD Key</tspan>
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="43.768" y="31.200006">(PNG)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_12">
+        <rect x="257.625" y="344.5" width="180.625" height="67.5" fill="#7db4ea"/>
+        <rect x="257.625" y="344.5" width="180.625" height="67.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(262.625 359.05)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="0" y="12">Asset</tspan>
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="0" y="31.200006">API</tspan>
+        </text>
+      </g>
+      <g id="Graphic_13">
+        <rect x="653.5" y="344.5" width="212.25" height="67.5" fill="#7db4ea"/>
+        <rect x="653.5" y="344.5" width="212.25" height="67.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(658.5 359.05)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="0" y="12">REST</tspan>
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="0" y="31.200006">API</tspan>
+        </text>
+      </g>
+      <g id="Graphic_14">
+        <rect x="449.75" y="344.5" width="191.75" height="67.5" fill="#7db4ea"/>
+        <rect x="449.75" y="344.5" width="191.75" height="67.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(454.75 359.05)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="0" y="12">WebSocket</tspan>
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="0" y="31.200006">API</tspan>
+        </text>
+      </g>
+      <g id="Line_15">
+        <line x1="358.125" y1="343" x2="359.03957" y2="204.89972" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Line_16">
+        <path d="M 773.5 412 L 773.5 459.5 L 549 459.5 L 549 425.9" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Line_17">
+        <line x1="356.65684" y1="641" x2="358.04157" y2="426.89973" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Line_18">
+        <line x1="773.5" y1="242" x2="772.62835" y2="329.60064" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Line_19">
+        <line x1="550" y1="343" x2="550" y2="243.9" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Line_20">
+        <line x1="763.75" y1="242" x2="763.75" y2="329.1" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="2"/>
+      </g>
+      <g id="Line_21">
+        <line x1="539" y1="233" x2="539.8848" y2="332.1005" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="2"/>
+      </g>
+      <g id="Line_22">
+        <line x1="348.5" y1="242" x2="347.62463" y2="332.6006" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="2"/>
+      </g>
+      <g id="Graphic_25">
+        <rect x="466.5" y="477.75" width="127" height="109.5" fill="#368ddf"/>
+        <rect x="466.5" y="477.75" width="127" height="109.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(471.5 482.75)" fill="white">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="white" x="38.836" y="12">HUDS</tspan>
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="white" x="22.004" y="31.200006">Library (JS)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_26">
+        <rect x="479.5" y="525.75" width="101" height="47.5" fill="#f5dbc1"/>
+        <rect x="479.5" y="525.75" width="101" height="47.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(484.5 530.75)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="6.044" y="12">HUD Config</tspan>
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="23.14" y="31.200006">(JSON)</tspan>
+        </text>
+      </g>
+      <g id="Line_27">
+        <path d="M 466.5 497 L 401.8125 497 L 401.8125 427.9" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Graphic_29">
+        <rect x="466.5" y="123.5" width="127" height="109.5" fill="#368ddf"/>
+        <rect x="466.5" y="123.5" width="127" height="109.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(471.5 128.5)" fill="white">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="white" x="38.836" y="12">HUDS</tspan>
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="white" x="22.004" y="31.200006">Library (JS)</tspan>
+        </text>
+      </g>
+      <g id="Graphic_28">
+        <rect x="479.5" y="173" width="101" height="47.5" fill="#f5dbc1"/>
+        <rect x="479.5" y="173" width="101" height="47.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(484.5 178)" fill="black">
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="6.044" y="12">HUD Config</tspan>
+          <tspan font-family="Myriad Pro" font-size="16" font-weight="400" fill="black" x="23.14" y="31.200006">(JSON)</tspan>
+        </text>
+      </g>
+      <g id="Line_33">
+        <path d="M 401.8125 342 L 401.8125 295 L 512.5 295 L 512.5 245.9" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Line_34">
+        <line x1="390.5" y1="192" x2="391.414" y2="329.1003" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4.0,4.0" stroke-width="2"/>
+      </g>
+      <g id="Line_35">
+        <line x1="359.125" y1="411" x2="359.125" y2="358.9" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Line_36">
+        <line x1="401.8125" y1="411" x2="401.8125" y2="358.9" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Line_37">
+        <line x1="549" y1="411" x2="549" y2="358.9" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Line_38">
+        <line x1="772.5" y1="346" x2="772.5" y2="398.1" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Line_39">
+        <line x1="529.5" y1="638.25" x2="529.5" y2="586.15" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+      <g id="Line_40">
+        <line x1="560.5" y1="233" x2="561.38326" y2="330.60053" marker-end="url(#FilledArrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+      </g>
+    </g>
+  </g>
+</svg>
