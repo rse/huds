@@ -43,38 +43,12 @@ $ npm install -g huds
 Example
 -------
 
-Run a minimalistic [Hello World sample HUD](./sample/) with:
+Run a minimalistic [Hello World HUD](https://github.com/rse/huds-hud-hello/) with:
 
 ```
-$ git clone https://github.com/rse/huds/
-$ huds -a 127.0.0.1 -p 9999 -U sample -P sample -d sample:huds/sample,huds/sample/sample.yaml
+$ npm install huds-hud-hello
+$ huds -a 127.0.0.1 -p 9999 -U sample -P sample -d sample:@huds-hud-hello
 ```
-
-Usage
------
-
-HUDS provides the following command-line options:
-
--   `-h`, `--help`:<br/>
-    show usage help
-
--   `-V`, `--version`:<br/>
-    show version information")
-
-        .string("l").nargs("l", 1).alias("l", "log-file").default("l", "-")
-            .describe("l", "file for verbose logging")
-        .number("v").nargs("v", 1).alias("v", "log-level").default("v", 3)
-            .describe("v", "level for verbose logging (0-3)")
-        .string("a").nargs("a", 1).alias("a", "address").default("a", "0.0.0.0")
-            .describe("a", "IP address of service")
-        .number("p").nargs("p", 1).alias("p", "port").default("p", 9090)
-            .describe("p", "TCP port of service")
-        .string("U").nargs("U", 1).alias("U", "username").default("U", "")
-            .describe("U", "authenticating username for service")
-        .string("P").nargs("P", 1).alias("P", "password").default("P", "")
-            .describe("P", "authenticating password for service")
-        .array("d").nargs("d", 1).alias("d", "define").default("d", [])
-            .describe("d", "define HUD id:dir[,file]")
 
 License
 -------
