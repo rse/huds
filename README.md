@@ -40,14 +40,23 @@ Install Node.js and then install HUDS globally into your system with:
 $ npm install -g huds
 ```
 
+Usage
+-----
+
+The Unix manual pages
+[huds(8)]](https://github.com/rse/huds/blob/master/src/huds-server.md)
+(for the server CLI) and
+[huds(3)]](https://github.com/rse/huds/blob/master/src/huds-client.md)
+(for the client API) provide detailed usage information.
+
 Example
 -------
 
 Run a minimalistic [Hello World HUD](https://github.com/rse/huds-hud-hello/) with:
 
 ```
-$ npm install huds-hud-hello
-$ huds -a 127.0.0.1 -p 9999 -U sample -P sample -d sample:@huds-hud-hello
+$ npm install -g huds huds-hud-hello
+$ huds -a 127.0.0.1 -p 9999 -U hello -P hello -d hello:@huds-hud-hello
 ```
 
 License
