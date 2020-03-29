@@ -156,7 +156,7 @@ const my            = require("../package.json")
         const [ , id, dir, config ] = m
         if (HUD[id] !== undefined)
             throw new Error(`HUD "${id}" already defined`)
-        const { stat, pathname: dirResolved } = await resolvePathname(dir)
+        let { stat, pathname: dirResolved } = await resolvePathname(dir)
         if (stat === null)
             throw new Error(`HUD "${id}": base path "${dir}" not found`)
         if (stat.isFile()) {
