@@ -60,8 +60,8 @@ Example
 Run a minimalistic [Hello World HUD](https://github.com/rse/huds-hud-hello/) with:
 
 ```
-$ npm install -g huds huds-hud-hello
-$ huds -a 127.0.0.1 -p 9999 -U hello -P hello -d hello:@huds-hud-hello
+$ npx -p huds -p huds-hud-hello \
+  huds -a 127.0.0.1 -p 9999 -d hello:@huds-hud-hello
 ```
 
 For a more elaborated HUD check out the [Training
