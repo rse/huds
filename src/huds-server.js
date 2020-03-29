@@ -159,6 +159,11 @@ const my            = require("../package.json")
         const { stat, pathname: dirResolved } = await resolvePathname(dir)
         if (stat === null)
             throw new Error(`HUD "${id}": base path "${dir}" not found`)
+        if (stat.isFile()) {
+            const { stat: stat2, pathname: dirResolved2 } = await resolvePathname(path.dirname(dir))
+            stat = stat2
+            dirResolved = dirResolved2
+        }
         if (!stat.isDirectory())
             throw new Error(`HUD "${id}": base path "${dir}" not a directory`)
         log(2, `HUD definition: [${id}]: using base directory "${dirResolved}"`)
