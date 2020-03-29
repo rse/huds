@@ -1,4 +1,5 @@
-/*
+#!/usr/bin/env node
+/*!
 **  HUDS -- Head-Up-Display Server (HUDS)
 **  Copyright (c) 2020 Dr. Ralf S. Engelschall <rse@engelschall.com>
 **
