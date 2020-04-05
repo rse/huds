@@ -45,7 +45,7 @@
         "moment":                     "2.24.0",
         "ws":                         "7.2.3",
         "yargs":                      "15.3.1",
-        "chalk":                      "3.0.0",
+        "chalk":                      "4.0.0",
         "resolve":                    "1.15.1",
         "js-yaml":                    "3.13.1",
         "eventemitter3":              "4.0.0",
