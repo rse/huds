@@ -358,17 +358,18 @@ const my            = require("../package.json")
     const peers = {}
 
     /*  state fan-out  */
-    const fanout = (source, target, event) => {
-        log(2, `EVENT: emit: source-hud=${source}, target-hud=${target}, event=${event}`)
+    const fanout = (source, target, event, data) => {
+        log(2, `EVENT: emit: source-hud=${source}, target-hud=${target}, event=${event} data=${data}`)
         if (peers[target] !== undefined) {
             peers[target].forEach((peer) => {
-                log(3, `WebSocket: send: remote=${peer.req.connection.remoteAddress}, hud=${target}, event="${event}"`)
-                peer.ws.send(event)
+                const message = JSON.stringify({ id: target, event, data })
+                log(3, `WebSocket: send: remote=${peer.req.connection.remoteAddress}, message="${message}"`)
+                peer.ws.send(message)
             })
         }
     }
 
-    /*  serve command data  */
+    /*  serve client API library  */
     server.route({
         method:   "GET",
         path:     "/{id}/huds",
@@ -390,7 +391,7 @@ const my            = require("../package.json")
     /*  provide exclusive WebSocket route  */
     server.route({
         method:  "POST",
-        path:    "/{id}/event",
+        path:    "/{id}/events",
         options: {
             auth:    requireAuth ? { mode: "required", strategy: "basic" } : false,
             payload: { parse: false },
@@ -399,7 +400,7 @@ const my            = require("../package.json")
                     only: true,
                     autoping: 30 * 1000,
                     connect: ({ req, ws }) => {
-                        const id = req.url.replace(/^\/([^/]+)\/event$/, "$1")
+                        const id = req.url.replace(/^\/([^/]+)\/events$/, "$1")
                         if (HUD[id] === undefined) {
                             log(3, `WebSocket: connect: remote=${req.connection.remoteAddress}, hud=${id}, error="invalid-hud-id"`)
                             ws.close(1003, "invalid HUD id")
@@ -412,7 +413,7 @@ const my            = require("../package.json")
                         }
                     },
                     disconnect: ({ req, ws }) => {
-                        const id = req.url.replace(/^\/([^/]+)\/event$/, "$1")
+                        const id = req.url.replace(/^\/([^/]+)\/events$/, "$1")
                         if (HUD[id] === undefined)
                             log(3, `WebSocket: disconnect: remote=${req.connection.remoteAddress}, hud=${id}, error="invalid-hud-id"`)
                         else {
@@ -434,17 +435,19 @@ const my            = require("../package.json")
             log(3, `WebSocket: receive: remote=${req.info.remoteAddress}, hud=${id}, message=${message}`)
             if (HUD[id] === undefined)
                 return h.response("invalid HUD id").code(404)
-            const m = message.match(/^(?:([^=]+)=(.+?)|(.+?))(\r?\n)?$/)
-            if (m === null)
-                return h.response("invalid message").code(400)
-            let [ , target, event, event2 ] = m
-            if (target === undefined && event === undefined) {
-                target = id
-                event  = event2
+            let target, event, data
+            try {
+                const obj = JSON.parse(message)
+                target = obj.id
+                event  = obj.event
+                data   = obj.data
             }
-            else if (HUD[target] === undefined)
+            catch (ex) {
+                return h.response("invalid HUD event message").code(400)
+            }
+            if (HUD[target] === undefined)
                 return h.response("invalid HUD target id").code(404)
-            fanout(id, target, event)
+            fanout(id, target, event, data)
             return h.response().code(201)
         }
     })
@@ -458,11 +461,44 @@ const my            = require("../package.json")
         },
         handler: async (req, h) => {
             const id = req.params.id
-            if (HUD[id] === undefined)
-                return h.response().code(404)
             const event = req.params.event
-            log(3, `HAPI: receive: remote=${req.info.remoteAddress}, hud=${id}, event=${event}`)
-            fanout(id, id, event)
+            let data = req.query.data !== undefined ? req.query.data : "null"
+            log(3, `HAPI: GET: receive: remote=${req.info.remoteAddress}, hud=${id}, event=${event} data=${data}`)
+            if (HUD[id] === undefined)
+                return h.response("invalid HUD id").code(404)
+            try {
+                data = JSON.parse(data)
+            }
+            catch (ex) {
+                return h.response("invalid HUD event data").code(400)
+            }
+            fanout(id, id, event, data)
+            return h.response().code(201)
+        }
+    })
+
+    /*  serve command endpoint  */
+    server.route({
+        method:   "POST",
+        path:     "/{id}/event/{event}",
+        options: {
+            auth: requireAuth ? { mode: "required", strategy: "basic" } : false,
+            payload: { parse: false }
+        },
+        handler: async (req, h) => {
+            const id = req.params.id
+            const event = req.params.event
+            let data = req.payload.toString()
+            log(3, `HAPI: POST: receive: remote=${req.info.remoteAddress}, hud=${id}, event=${event} data=${data}`)
+            if (HUD[id] === undefined)
+                return h.response("invalid HUD id").code(404)
+            try {
+                data = JSON.parse(data)
+            }
+            catch (ex) {
+                return h.response("invalid HUD event data").code(400)
+            }
+            fanout(id, id, event, data)
             return h.response().code(201)
         }
     })

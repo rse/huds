@@ -103,11 +103,13 @@ The individual communication steps in the diagram are:
     under virtual HUDS URL `http://127.0.0.1:9999/<hud-id>/huds`.
 
 6.  The [HUDS (Client) Library](src/huds-client.js) opens a WebSocket connection back to [HUDS](src/huds-server.js)
-    under the HUDS URL `http://127.0.0.1:9999/<hud-id>/event`.
+    under the HUDS URL `http://127.0.0.1:9999/<hud-id>/events`.
 
 7.  An external program (like Elgato Stream Deck's System:Website
     function or Node-RED's HTTP-Request or just cURL) triggers an event
-    under the HUDS URL `http://127.0.0.1:9999/<hud-id>/event/<event-name>=<event-value>`.
+    with a HTTP GET request under the HUDS URL `http://127.0.0.1:9999/<hud-id>/event/<event-name>[?data=<event-data>]`.
+    and with a HTTP POST request under the HUDS URL `http://127.0.0.1:9999/<hud-id>/event/<event-name>` and
+    with `<event-data>` as the payload. In both cases, `<event-data>` has to be a JSON string.
 
 8.  [HUDS](src/huds-server.js) forwards the received event to all instances of the HUD by
     sending out the event to all HUD SPAs over their WebSocket

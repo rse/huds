@@ -24,6 +24,7 @@
 
 const EventEmitter = require("eventemitter3")
 const WebSocket    = require("reconnecting-websocket")
+const micromatch   = require("micromatch")
 
 class HUDS extends EventEmitter {
     constructor () {
@@ -39,7 +40,7 @@ class HUDS extends EventEmitter {
         url += "//"
         url += document.location.host
         url += document.location.pathname
-        url += "event"
+        url += "events"
         this.url = url
 
         /*  determine options  */
@@ -96,22 +97,51 @@ class HUDS extends EventEmitter {
     }
 
     /*  send an event to a HUD  */
-    send (id, event) {
+    send (event, data = null, id = this.id) {
         if (this.ws === null)
             throw new Error("not connected")
-        this.emit("send", `${id}=${event}`)
-        this.ws.send(`${id}=${event}`)
+        const message = JSON.stringify({ id, event, data })
+        this.emit("send", message)
+        this.ws.send(message)
     }
 
     /*  bind to a HUD event  */
-    bind (comp, props, receiver) {
+    bind (pattern, receiver) {
+        /*  sanity check and canonicalize arguments  */
+        let patterns
+        if (typeof pattern === "string")
+            patterns = [ pattern ]
+        else if (typeof pattern === "object" && pattern instanceof Array)
+            patterns = pattern
+        else
+            throw new Error("invalid pattern argument")
+        if (typeof receiver !== "function")
+            throw new Error("invalid receiver argument")
+
+        /*  react on received messages  */
         this.on("receive", (message) => {
-            const m = message.match(/^([^.]+)\.([^=]+)=(.*)$/)
-            if (m !== null) {
-                const [ , prefix, key, val ] = m
-                if (prefix === comp && props.indexOf(key) >= 0)
-                    receiver(key, val)
+            /*  parse event message  */
+            let id, event, data
+            try {
+                const obj = JSON.parse(message)
+                id    = obj.id
+                event = obj.event
+                data  = obj.data
             }
+            catch (ex) {
+                return
+            }
+
+            /*  filter event  */
+            if (id !== this.id)
+                return
+            if (typeof event !== "string")
+                return
+            if (!micromatch.all(event, patterns))
+                return
+
+            /*  deliver event  */
+            receiver(event, data)
         })
     }
 
