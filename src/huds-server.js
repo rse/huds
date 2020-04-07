@@ -38,6 +38,7 @@ const moment        = require("moment")
 const resolve       = require("resolve")
 const jsYAML        = require("js-yaml")
 const Latching      = require("latching")
+const MQTT          = require("async-mqtt")
 const my            = require("../package.json")
 
 /*  create global latching instance  */
@@ -55,6 +56,7 @@ const HUD = {}
             "[-h|--help] [-V|--version] " +
             "[-l|--log-file <log-file>] [-v|--log-level <log-level>] " +
             "[-a <address>] [-p <port>] " +
+            "[-b <broker>] [-t <topic>] " +
             "[-U <username>] [-P <password>] " +
             "[-d <hud-id>:<hud-directory>[,<hud-config-file>]]"
         )
@@ -68,6 +70,10 @@ const HUD = {}
             .describe("v", "level for verbose logging (0-3)")
         .string("a").nargs("a", 1).alias("a", "address").default("a", "127.0.0.1")
             .describe("a", "IP address of service")
+        .string("b").nargs("b", 1).alias("b", "broker").default("b", "")
+            .describe("b", "URL of MQTT broker")
+        .string("t").nargs("t", 1).alias("t", "topic").default("t", "")
+            .describe("t", "topic at MQTT broker")
         .number("p").nargs("p", 1).alias("p", "port").default("p", 9999)
             .describe("p", "TCP port of service")
         .string("U").nargs("U", 1).alias("U", "username").default("U", "")
@@ -102,6 +108,8 @@ const HUD = {}
     reduce("v", "logLevel")
     reduce("a", "address")
     reduce("p", "port")
+    reduce("b", "broker")
+    reduce("t", "topic")
     reduce("U", "username")
     reduce("P", "password")
 
@@ -196,7 +204,7 @@ const HUD = {}
     }
 
     /*  establish REST server  */
-    log(2, `listening to http://${argv.address}:${argv.port}`)
+    log(2, `listening to REST/Websocket service http://${argv.address}:${argv.port}`)
     const server = HAPI.server({
         host:  argv.address,
         port:  argv.port,
@@ -539,10 +547,40 @@ const HUD = {}
 
     /*  start REST server  */
     await server.start()
-    latching.hook("server:start", "none")
+
+    /*  establish MQTT connection  */
+    let broker = null
+    if (argv.broker && argv.topic) {
+        log(2, `connecting to MQTT broker ${argv.broker}`)
+        broker = await MQTT.connectAsync(argv.broker)
+        latching.hook("mqtt:broker", "none", broker)
+        log(2, `subscribing to MQTT topic "${argv.topic}"`)
+        await broker.subscribe(argv.topic)
+        broker.on("message", (topic, message) => {
+            log(3, `MQTT: receive: topic="${topic}" message="${message}"`)
+            latching.hook("mqtt:message", "none", topic, message)
+            let id, event, data
+            try {
+                const obj = JSON.parse(message)
+                id    = obj.id
+                event = obj.event
+                data  = obj.data
+            }
+            catch (ex) {
+                return
+            }
+            if (HUD[id] === undefined)
+                return
+            fanout(id, id, event, data)
+        })
+    }
 
     /*  graceful termination handling  */
+    let terminating = false
     const terminate = async (signal) => {
+        if (terminating)
+            return
+        terminating = true
         log(3, `received ${signal} signal -- shutting down`)
         try {
             for (const id of Object.keys(HUD)) {
@@ -554,6 +592,12 @@ const HUD = {}
         }
         catch (ex) {
             /*  intentionally just ignore  */
+        }
+        log(3, "stopping HAPI service")
+        await server.stop().catch(() => {})
+        if (broker !== null) {
+            log(3, "stopping MQTT service")
+            await broker.end().catch(() => {})
         }
         log(3, "process exit")
         process.exit(0)

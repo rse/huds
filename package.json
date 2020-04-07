@@ -51,7 +51,8 @@
         "eventemitter3":              "4.0.0",
         "latching":                   "1.0.8",
         "micromatch":                 "4.0.2",
-        "reconnecting-websocket":     "4.4.0"
+        "reconnecting-websocket":     "4.4.0",
+        "async-mqtt":                 "2.5.0"
     },
     "scripts": {
         "prepublishOnly":             "grunt default",
