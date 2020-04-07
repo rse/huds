@@ -185,7 +185,7 @@ const my            = require("../package.json")
         HUD[id] = { dir: dirResolved, data }
         const pkg = require(path.resolve(path.join(dirResolved, "package.json")))
         if (pkg.browser !== undefined)
-            HUD[id].browser = path.resolve(dirResolved, pkg.browser)
+            HUD[id].browser = pkg.browser
         if (pkg.main !== undefined && pkg.main !== "") {
             HUD[id].main = path.resolve(dirResolved, pkg.main)
             const plugin = require(HUD[id].main)
