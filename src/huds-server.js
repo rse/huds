@@ -37,6 +37,7 @@ const chalk         = require("chalk")
 const moment        = require("moment")
 const resolve       = require("resolve")
 const jsYAML        = require("js-yaml")
+const Latching      = require("latching")
 const my            = require("../package.json")
 
 /*  establísh asynchronous context  */
@@ -129,6 +130,9 @@ const my            = require("../package.json")
         }
     }
 
+    /*  create a latching instance  */
+    const latching = new Latching()
+
     /*  show startup message  */
     log(2, `starting Head-Up-Display Server (HUDS) ${my.version}`)
 
@@ -179,6 +183,14 @@ const my            = require("../package.json")
             data = jsYAML.safeLoad(yaml)
         }
         HUD[id] = { dir: dirResolved, data }
+        const pkg = require(path.resolve(path.join(dirResolved, "package.json")))
+        if (pkg.browser !== undefined)
+            HUD[id].browser = path.resolve(dirResolved, pkg.browser)
+        if (pkg.main !== undefined && pkg.main !== "") {
+            HUD[id].main = path.resolve(dirResolved, pkg.main)
+            const plugin = require(HUD[id].main)
+            latching.use(plugin, { log })
+        }
     }
 
     /*  establish REST server  */
@@ -195,6 +207,7 @@ const my            = require("../package.json")
     await server.register({ plugin: HAPIAuthBasic })
     await server.register({ plugin: HAPITraffic })
     await server.register({ plugin: HAPIHeader, options: { Server: `${my.name}/${my.version}` } })
+    latching.hook("hapi:server", "none", server)
 
     /*  provide client IP address  */
     server.ext("onRequest", async (request, h) => {
@@ -205,6 +218,7 @@ const my            = require("../package.json")
         else
             clientAddress = request.info.remoteAddress
         request.app.clientAddress = clientAddress
+        latching.hook("hapi:on-request", "none", request, h)
         return h.continue
     })
 
@@ -228,12 +242,14 @@ const my            = require("../package.json")
             "sent="     + traffic.sentPayload + "/" + traffic.sentRaw + ", " +
             "duration=" + traffic.timeDuration
         log(2, `HAPI: request: ${msg}`)
+        latching.hook("hapi:on-response", "none", request)
     })
     server.events.on({ name: "request", channels: [ "error" ] }, (request, event, tags) => {
         if (event.error instanceof Error)
             log(1, `HAPI: request-error: ${event.error.message}`)
         else
             log(1, `HAPI: request-error: ${event.error}`)
+        latching.hook("hapi:on-request-error", "none", request)
     })
     server.events.on("log", (event, tags) => {
         if (tags.error) {
@@ -243,6 +259,7 @@ const my            = require("../package.json")
             else
                 log(1, `HAPI: log: ${err}`)
         }
+        latching.hook("hapi:on-log", "none", event, tags)
     })
 
     /*  register Basic authentication stategy  */
@@ -255,7 +272,9 @@ const my            = require("../package.json")
                 isValid = true
                 credentials = { username }
             }
-            return { isValid, credentials }
+            const response = { isValid, credentials }
+            latching.hook("hapi:validate", "none", response)
+            return response
         }
     })
 
@@ -267,7 +286,7 @@ const my            = require("../package.json")
             auth: requireAuth ? { mode: "required", strategy: "basic" } : false
         },
         handler: async (req, h) => {
-            const data =
+            let data =
                 `<!DOCTYPE html>
                  <html>
                      <head>
@@ -284,6 +303,7 @@ const my            = require("../package.json")
                          </ul>
                      </body>
                  </html>`
+            data = latching.hook("hapi:serve-index", "pass", data)
             return h.response(data).code(200)
         }
     })
@@ -306,7 +326,11 @@ const my            = require("../package.json")
             if (file === "huds")
                 return h.file(path.join(__dirname, "../dst/huds-client.js"), { confine: false })
             if (file === "")
-                file = "index.html"
+                file = HUD[id].browser ? HUD[id].browser : "index.html"
+
+            /*  allow hooks to serve file  */
+            if (latching.hook("hapi:serve-static", "or", false, req, h, id, file))
+                return
 
             /*  serve file from NPM package or from the HUD directory  */
             let m
@@ -360,9 +384,11 @@ const my            = require("../package.json")
     /*  state fan-out  */
     const fanout = (source, target, event, data) => {
         log(2, `EVENT: emit: source-hud=${source}, target-hud=${target}, event=${event} data=${data}`)
+        const object = { id: target, event, data }
+        latching.hook("fanout", "none", object, source, target, event, data)
+        const message = JSON.stringify(object)
         if (peers[target] !== undefined) {
             peers[target].forEach((peer) => {
-                const message = JSON.stringify({ id: target, event, data })
                 log(3, `WebSocket: send: remote=${peer.req.connection.remoteAddress}, message="${message}"`)
                 peer.ws.send(message)
             })
@@ -383,7 +409,8 @@ const my            = require("../package.json")
                 return h.response().code(404)
             const lib = await fs.promises.readFile(path.join(__dirname, "../dst/huds-client.js"), { encoding: "utf8" })
             const cfg = `HUDS.config(${JSON.stringify(HUD[id].data)})`
-            const js = `${lib};\n${cfg};\n`
+            let js = `${lib};\n${cfg};\n`
+            js = latching.hook("serve-huds", "pass", js, req, h)
             return h.response(js).type("text/javascript").code(200)
         }
     })
@@ -406,6 +433,7 @@ const my            = require("../package.json")
                             ws.close(1003, "invalid HUD id")
                         }
                         else {
+                            latching.hook("websocket:connect", "none", req, ws, id)
                             if (peers[id] === undefined)
                                 peers[id] = []
                             peers[id].push({ req, ws })
@@ -417,6 +445,7 @@ const my            = require("../package.json")
                         if (HUD[id] === undefined)
                             log(3, `WebSocket: disconnect: remote=${req.connection.remoteAddress}, hud=${id}, error="invalid-hud-id"`)
                         else {
+                            latching.hook("websocket:disconnect", "none", req, ws, id)
                             if (peers[id] !== undefined) {
                                 peers[id] = peers[id].filter((x) => x.ws !== ws)
                                 if (peers[id].length === 0)
@@ -432,6 +461,7 @@ const my            = require("../package.json")
             /*  treat incoming messages as commands, too  */
             const id = req.params.id
             const message = req.payload.toString()
+            latching.hook("websocket:message", "none", req, h, id, message)
             log(3, `WebSocket: receive: remote=${req.info.remoteAddress}, hud=${id}, message=${message}`)
             if (HUD[id] === undefined)
                 return h.response("invalid HUD id").code(404)
@@ -463,6 +493,7 @@ const my            = require("../package.json")
             const id = req.params.id
             const event = req.params.event
             let data = req.query.data !== undefined ? req.query.data : "null"
+            latching.hook("hapi:event", "none", req, h, id, event, data)
             log(3, `HAPI: GET: receive: remote=${req.info.remoteAddress}, hud=${id}, event=${event} data=${data}`)
             if (HUD[id] === undefined)
                 return h.response("invalid HUD id").code(404)
@@ -489,6 +520,7 @@ const my            = require("../package.json")
             const id = req.params.id
             const event = req.params.event
             let data = req.payload.toString()
+            latching.hook("hapi:event", "none", req, h, id, event, data)
             log(3, `HAPI: POST: receive: remote=${req.info.remoteAddress}, hud=${id}, event=${event} data=${data}`)
             if (HUD[id] === undefined)
                 return h.response("invalid HUD id").code(404)
@@ -505,6 +537,7 @@ const my            = require("../package.json")
 
     /*  start REST server  */
     await server.start()
+    latching.hook("hapi:start", "none", server)
 })().catch((err) => {
     /*  fatal error handling  */
     process.stderr.write(`huds: ERROR: ${err.message}\n`)
