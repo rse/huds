@@ -40,6 +40,12 @@ const jsYAML        = require("js-yaml")
 const Latching      = require("latching")
 const my            = require("../package.json")
 
+/*  create global latching instance  */
+const latching = new Latching()
+
+/*  create global HUD registry  */
+const HUD = {}
+
 /*  establísh asynchronous context  */
 ;(async () => {
     /*  parse command-line arguments  */
@@ -130,9 +136,6 @@ const my            = require("../package.json")
         }
     }
 
-    /*  create a latching instance  */
-    const latching = new Latching()
-
     /*  show startup message  */
     log(2, `starting Head-Up-Display Server (HUDS) ${my.version}`)
 
@@ -152,7 +155,6 @@ const my            = require("../package.json")
             stat = await fs.promises.stat(pathname).catch(() => null)
         return { stat, pathname }
     }
-    const HUD = {}
     for (const spec of argv.define) {
         const m = spec.match(/^(.+?):(.+?)(?:,(.+))?$/)
         if (m === null)
@@ -189,7 +191,7 @@ const my            = require("../package.json")
         if (pkg.main !== undefined && pkg.main !== "") {
             HUD[id].main = path.resolve(dirResolved, pkg.main)
             const plugin = require(HUD[id].main)
-            latching.use(plugin, { log })
+            HUD[id].plugin = latching.use(plugin, { log, config: data })
         }
     }
 
@@ -537,9 +539,40 @@ const my            = require("../package.json")
 
     /*  start REST server  */
     await server.start()
-    latching.hook("hapi:start", "none", server)
+    latching.hook("server:start", "none")
+
+    /*  graceful termination handling  */
+    const terminate = async (signal) => {
+        log(3, `received ${signal} signal -- shutting down`)
+        try {
+            for (const id of Object.keys(HUD)) {
+                if (HUD[id].plugin !== undefined) {
+                    latching.unuse(HUD[id].plugin)
+                    delete HUD[id].plugin
+                }
+            }
+        }
+        catch (ex) {
+            /*  intentionally just ignore  */
+        }
+        log(3, "process exit")
+        process.exit(0)
+    }
+    process.on("SIGINT",  () => terminate("INT"))
+    process.on("SIGTERM", () => terminate("TERM"))
 })().catch((err) => {
     /*  fatal error handling  */
+    try {
+        for (const id of Object.keys(HUD)) {
+            if (HUD[id].plugin !== undefined) {
+                latching.unuse(HUD[id].plugin)
+                delete HUD[id].plugin
+            }
+        }
+    }
+    catch (ex) {
+        /*  intentionally just ignore  */
+    }
     process.stderr.write(`huds: ERROR: ${err.message}\n`)
     process.exit(1)
 })
