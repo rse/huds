@@ -194,12 +194,14 @@ const HUD = {}
         }
         HUD[id] = { dir: dirResolved, data }
         const pkg = require(path.resolve(path.join(dirResolved, "package.json")))
-        if (pkg.browser !== undefined)
-            HUD[id].browser = pkg.browser
-        if (pkg.main !== undefined && pkg.main !== "") {
-            HUD[id].main = path.resolve(dirResolved, pkg.main)
-            const plugin = require(HUD[id].main)
-            HUD[id].plugin = latching.use(plugin, { log, config: data })
+        if (typeof pkg.huds === "object") {
+            if (typeof pkg.huds.client === "string")
+                HUD[id].client = pkg.huds.client
+            if (typeof pkg.huds.server === "string") {
+                HUD[id].server = path.resolve(dirResolved, pkg.huds.server)
+                const plugin = require(HUD[id].server)
+                HUD[id].plugin = latching.use(plugin, { log, config: data })
+            }
         }
     }
 
@@ -336,7 +338,7 @@ const HUD = {}
             if (file === "huds")
                 return h.file(path.join(__dirname, "../dst/huds-client.js"), { confine: false })
             if (file === "")
-                file = HUD[id].browser ? HUD[id].browser : "index.html"
+                file = HUD[id].client ? HUD[id].client : "index.html"
 
             /*  allow hooks to serve file  */
             if (latching.hook("hapi:serve-static", "or", false, req, h, id, file))
