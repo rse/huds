@@ -76,7 +76,7 @@ Architecture
 HUDS is based on a Client/Server architecture as illustrated in the
 following diagram:
 
-![architecture](architecture.svg)
+![architecture](architecture.png)
 
 The individual communication steps in the diagram are:
 
