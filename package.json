@@ -22,7 +22,7 @@
         "grunt-eslint":               "22.0.0",
         "babel-eslint":               "10.1.0",
         "@babel/core":                "7.9.6",
-        "eslint":                     "6.8.0",
+        "eslint":                     "7.0.0",
         "eslint-config-standard":     "14.1.1",
         "eslint-plugin-standard":     "4.0.1",
         "eslint-plugin-promise":      "4.2.1",
@@ -51,6 +51,7 @@
         "eventemitter3":              "4.0.0",
         "latching":                   "1.0.8",
         "micromatch":                 "4.0.2",
+        "mixin-deep":                 "2.0.1",
         "reconnecting-websocket":     "4.4.0",
         "async-mqtt":                 "2.5.0"
     },

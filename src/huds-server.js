@@ -39,6 +39,7 @@ const resolve       = require("resolve")
 const jsYAML        = require("js-yaml")
 const Latching      = require("latching")
 const MQTT          = require("async-mqtt")
+const mixinDeep     = require("mixin-deep")
 const my            = require("../package.json")
 
 /*  create global latching instance  */
@@ -58,7 +59,7 @@ const HUD = {}
             "[-a <address>] [-p <port>] " +
             "[-b <broker>] [-t <topic>] " +
             "[-U <username>] [-P <password>] " +
-            "[-d <hud-id>:<hud-directory>[,<hud-config-file>]]"
+            "[-d <hud-id>:<hud-directory>[,<hud-config-file>[,<hud-config-file>[,...]]]]"
         )
         .help("h").alias("h", "help").default("h", false)
             .describe("h", "show usage help")
@@ -183,14 +184,18 @@ const HUD = {}
         log(2, `HUD definition: [${id}]: using base directory "${dirResolved}"`)
         let data = {}
         if (config) {
-            const { stat, pathname: configResolved } = await resolvePathname(config)
-            if (stat === null)
-                throw new Error(`HUD "${id}": config path "${config}" not found`)
-            if (!stat.isFile())
-                throw new Error(`HUD "${id}": config path "${config}" is not a file`)
-            log(2, `HUD definition: [${id}]: using configuration file "${configResolved}"`)
-            const yaml = await fs.promises.readFile(configResolved, { encoding: "utf8" })
-            data = jsYAML.safeLoad(yaml)
+            let configFiles = config.split(",")
+            for (const configFile of configFiles) {
+                const { stat, pathname: configResolved } = await resolvePathname(configFile)
+                if (stat === null)
+                    throw new Error(`HUD "${id}": config path "${configFile}" not found`)
+                if (!stat.isFile())
+                    throw new Error(`HUD "${id}": config path "${configFile}" is not a file`)
+                log(2, `HUD definition: [${id}]: reading configuration file "${configResolved}"`)
+                const yaml = await fs.promises.readFile(configResolved, { encoding: "utf8" })
+                let obj = jsYAML.safeLoad(yaml)
+                data = mixinDeep(data, obj)
+            }
         }
         HUD[id] = { dir: dirResolved, data }
         const pkg = require(path.resolve(path.join(dirResolved, "package.json")))
