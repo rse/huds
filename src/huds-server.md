@@ -44,10 +44,10 @@ The following options exist:
 -   \[`-P`|`--password` *password*\]:
     Authenticating password for service.
 
--   \[`-d`|`--define` *hud-id*`:`*hud-directory*\[`,`*hud-config-file*\]\]:
+-   \[`-d`|`--define` *hud-id*`:`*hud-directory*\[`,`*hud-config-file*,\[...\]\]\]:
     Define a HUD under the unique identifier *hud-id*, with
-    base directory *hud-directory* and optionally
-    the YAML configuration file *hud-config-file*.
+    base directory *hud-directory* and zero or more
+    (mixed together) YAML configuration files *hud-config-file*.
 
 ## EXAMPLE
 
