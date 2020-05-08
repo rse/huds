@@ -184,7 +184,7 @@ const HUD = {}
         log(2, `HUD definition: [${id}]: using base directory "${dirResolved}"`)
         let data = {}
         if (config) {
-            let configFiles = config.split(",")
+            const configFiles = config.split(",")
             for (const configFile of configFiles) {
                 const { stat, pathname: configResolved } = await resolvePathname(configFile)
                 if (stat === null)
@@ -193,7 +193,7 @@ const HUD = {}
                     throw new Error(`HUD "${id}": config path "${configFile}" is not a file`)
                 log(2, `HUD definition: [${id}]: reading configuration file "${configResolved}"`)
                 const yaml = await fs.promises.readFile(configResolved, { encoding: "utf8" })
-                let obj = jsYAML.safeLoad(yaml)
+                const obj = jsYAML.safeLoad(yaml)
                 data = mixinDeep(data, obj)
             }
         }
