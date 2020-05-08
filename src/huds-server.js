@@ -400,7 +400,7 @@ const HUD = {}
 
     /*  state fan-out  */
     const fanout = (source, target, event, data) => {
-        log(2, `EVENT: emit: source-hud=${source}, target-hud=${target}, event=${event} data=${JSON.stringify(data)}`)
+        log(3, `EVENT: emit: source-hud=${source}, target-hud=${target}, event=${event} data=${JSON.stringify(data)}`)
         const object = { id: target, event, data }
         latching.hook("fanout", "none", object, source, target, event, data)
         const message = JSON.stringify(object)
