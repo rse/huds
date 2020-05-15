@@ -1,7 +1,7 @@
 {
     "name":                           "huds",
     "version":                        "1.4.1",
-    "homepage":                       "http://github.com/rse/huds",
+    "homepage":                       "https://github.com/rse/huds",
     "description":                    "Head-Up-Display Server (HUDS)",
     "author": {
         "name":                       "Dr. Ralf S. Engelschall",
@@ -9,6 +9,10 @@
         "url":                        "http://engelschall.com"
     },
     "license":                        "MIT",
+    "repository": {
+        "type":                       "git",
+        "url":                        "https://github.com/rse/huds"
+    },
     "main":                           "src/huds-server.js",
     "browser":                        "dst/huds-client.js",
     "bin": {
