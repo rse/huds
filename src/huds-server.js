@@ -57,7 +57,7 @@ const HUD = {}
             "[-h|--help] [-V|--version] " +
             "[-l|--log-file <log-file>] [-v|--log-level <log-level>] " +
             "[-a <address>] [-p <port>] " +
-            "[-b <broker>] [-t <topic>] " +
+            "[-b <broker>] [-r <topic>] [-s <topic>] " +
             "[-U <username>] [-P <password>] " +
             "[-d <hud-id>:<hud-directory>[,<hud-config-file>[,<hud-config-file>[,...]]]]"
         )
@@ -73,8 +73,12 @@ const HUD = {}
             .describe("a", "IP address of service")
         .string("b").nargs("b", 1).alias("b", "broker").default("b", "")
             .describe("b", "URL of MQTT broker")
-        .string("t").nargs("t", 1).alias("t", "topic").default("t", "")
-            .describe("t", "topic at MQTT broker")
+        .string("n").nargs("n", 1).alias("n", "name").default("n", "")
+            .describe("n", "name of MQTT ports")
+        .string("r").nargs("r", 1).alias("r", "topic-recv").default("r", "")
+            .describe("r", "receive topic at MQTT broker")
+        .string("s").nargs("s", 1).alias("s", "topic-send").default("s", "")
+            .describe("s", "send topic at MQTT broker")
         .number("p").nargs("p", 1).alias("p", "port").default("p", 9999)
             .describe("p", "TCP port of service")
         .string("U").nargs("U", 1).alias("U", "username").default("U", "")
@@ -110,7 +114,9 @@ const HUD = {}
     reduce("a", "address")
     reduce("p", "port")
     reduce("b", "broker")
-    reduce("t", "topic")
+    reduce("n", "name")
+    reduce("r", "topicRecv")
+    reduce("t", "topicSend")
     reduce("U", "username")
     reduce("P", "password")
 
@@ -395,8 +401,20 @@ const HUD = {}
         }
     })
 
+    /*  establish MQTT connection  */
+    let broker = null
+    if (argv.broker !== "" && (argv.topicRecv !== "" || argv.topicSend !== "")) {
+        log(2, `connecting to MQTT broker ${argv.broker}`)
+        broker = await MQTT.connectAsync(argv.broker, { rejectUnauthorized: false })
+        latching.hook("mqtt:broker", "none", broker)
+    }
+
     /*  state store  */
     const peers = {}
+
+    /*  store MQTT send channel as a peer  */
+    if (argv.topicSend !== "" && argv.name !== "")
+        peers[argv.name] = [ { mqtt: broker } ]
 
     /*  state fan-out  */
     const fanout = (source, target, event, data) => {
@@ -406,10 +424,40 @@ const HUD = {}
         const message = JSON.stringify(object)
         if (peers[target] !== undefined) {
             peers[target].forEach((peer) => {
-                log(3, `WebSocket: send: remote=${peer.req.connection.remoteAddress}, message="${message}"`)
-                peer.ws.send(message)
+                if (peer.ws) {
+                    log(3, `WebSocket: send: remote=${peer.req.connection.remoteAddress}, message="${message}"`)
+                    peer.ws.send(message)
+                }
+                else if (peer.mqtt) {
+                    log(3, `MQTT: send: remote=${argv.name}, message="${message}"`)
+                    peer.mqtt.publish(argv.topicSend, message, { qos: 2 })
+                }
             })
         }
+    }
+
+    /*  receive messages from MQTT topic  */
+    if (argv.broker !== "" && argv.topicRecv !== "") {
+        log(2, `subscribing to MQTT receive-topic "${argv.topicRecv}"`)
+        await broker.subscribe(argv.topicRecv)
+        broker.on("message", (topic, message) => {
+            log(3, `MQTT: receive: topic="${topic}" message="${message}"`)
+            latching.hook("mqtt:message", "none", topic, message)
+            let id, event, data
+            try {
+                const obj = JSON.parse(message)
+                id    = obj.id
+                event = obj.event
+                data  = obj.data
+            }
+            catch (ex) {
+                return
+            }
+            if (HUD[id] === undefined)
+                return
+            const peer = argv.name !== "" ? argv.name : id
+            fanout(peer, id, event, data)
+        })
     }
 
     /*  serve client API library  */
@@ -492,7 +540,7 @@ const HUD = {}
             catch (ex) {
                 return h.response("invalid HUD event message").code(400)
             }
-            if (HUD[target] === undefined)
+            if (HUD[target] === undefined && peers[target] === undefined)
                 return h.response("invalid HUD target id").code(404)
             fanout(id, target, event, data)
             return h.response().code(201)
@@ -554,33 +602,6 @@ const HUD = {}
 
     /*  start REST server  */
     await server.start()
-
-    /*  establish MQTT connection  */
-    let broker = null
-    if (argv.broker && argv.topic) {
-        log(2, `connecting to MQTT broker ${argv.broker}`)
-        broker = await MQTT.connectAsync(argv.broker, { rejectUnauthorized: false })
-        latching.hook("mqtt:broker", "none", broker)
-        log(2, `subscribing to MQTT topic "${argv.topic}"`)
-        await broker.subscribe(argv.topic)
-        broker.on("message", (topic, message) => {
-            log(3, `MQTT: receive: topic="${topic}" message="${message}"`)
-            latching.hook("mqtt:message", "none", topic, message)
-            let id, event, data
-            try {
-                const obj = JSON.parse(message)
-                id    = obj.id
-                event = obj.event
-                data  = obj.data
-            }
-            catch (ex) {
-                return
-            }
-            if (HUD[id] === undefined)
-                return
-            fanout(id, id, event, data)
-        })
-    }
 
     /*  graceful termination handling  */
     let terminating = false
