@@ -184,11 +184,16 @@ class HUDS extends EventEmitter {
     }
 
     /*  convert VueJS properties to CSS variables  */
-    static vueprop2cssvar () {
+    static vueprop2cssvar (whitelist = null, blacklist = null) {
         return function () {
             const css = {}
-            for (const key of Object.keys(this.$props))
-                css[`--${key}`] = this[key]
+            for (const key of Object.keys(this.$props)) {
+                if ((whitelist === null && blacklist === null)
+                    || (whitelist !== null && whitelist[key])
+                    || (blacklist !== null && !blacklist[key])) {
+                    css[`--${key}`] = this[key]
+                }
+            }
             return css
         }
     }
