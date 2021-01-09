@@ -199,7 +199,7 @@ const HUD = {}
                     throw new Error(`HUD "${id}": config path "${configFile}" is not a file`)
                 log(2, `HUD definition: [${id}]: reading configuration file "${configResolved}"`)
                 const yaml = await fs.promises.readFile(configResolved, { encoding: "utf8" })
-                const obj = jsYAML.safeLoad(yaml)
+                const obj = jsYAML.load(yaml)
                 data = mixinDeep(data, obj)
             }
         }
