@@ -255,7 +255,6 @@ const HUD = {}
             protocol = `WebSocket/${wsVersion}+${protocol}`
         }
         const msg =
-            "request: " +
             "remote="   + request.app.clientAddress + ", " +
             "method="   + request.method.toUpperCase() + ", " +
             "url="      + request.url.pathname + ", " +
