@@ -1,6 +1,6 @@
 {
     "name":                           "huds",
-    "version":                        "1.6.7",
+    "version":                        "1.6.8",
     "homepage":                       "https://github.com/rse/huds",
     "description":                    "Head-Up-Display Server (HUDS)",
     "author": {
