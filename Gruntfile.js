@@ -30,7 +30,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         eslint: {
             options: {
-                configFile: "eslint.yaml"
+                overrideConfigFile: "eslint.yaml"
             },
             "huds-server": [ "src/huds-server.js" ],
             "huds-client": [ "src/huds-client.js" ]
