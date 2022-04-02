@@ -86,7 +86,7 @@ The individual communication steps in the diagram are:
     for an example of a HUD configuration.
 
 2.  OBS Studio's CEF-based Browser Source open the URL
-    `http://127.0.0.1:9999/<hud-id>/`
+    `http://127.0.0.1:9999/<hud-id>/[#<key>=<value>,[...]]`
 
 3.  [HUDS](src/huds-server.js) delivers the HUD SPA with all its HTML/CSS/JS files.
     The individual assets are served via
