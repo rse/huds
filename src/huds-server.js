@@ -171,16 +171,21 @@ const HUD = {}
         return { stat, pathname }
     }
     for (const spec of argv.define) {
+        /*  parse definition  */
         const m = spec.match(/^(.+?):(.+?)(?:,(.+))?$/)
         if (m === null)
             throw new Error(`invalid HUD id/directory/config combination "${spec}"`)
         const [ , id, dir, config ] = m
         if (HUD[id] !== undefined)
             throw new Error(`HUD "${id}" already defined`)
+
+        /*  resolve file/directory  */
+        let filename = null
         let { stat, pathname: dirResolved } = await resolvePathname(dir)
         if (stat === null)
             throw new Error(`HUD "${id}": base path "${dir}" not found`)
         if (stat.isFile()) {
+            filename = path.basename(dir)
             const { stat: stat2, pathname: dirResolved2 } = await resolvePathname(path.dirname(dirResolved))
             stat = stat2
             dirResolved = dirResolved2
@@ -188,6 +193,8 @@ const HUD = {}
         if (!stat.isDirectory())
             throw new Error(`HUD "${id}": base path "${dir}" not a directory`)
         log(2, `HUD definition: [${id}]: using base directory "${dirResolved}"`)
+
+        /*  determine configuration data  */
         let data = {}
         if (config) {
             const configFiles = config.split(",")
@@ -203,15 +210,25 @@ const HUD = {}
                 data = mixinDeep(data, obj)
             }
         }
+
+        /*  create HUD information  */
         HUD[id] = { dir: dirResolved, data }
-        const pkg = require(path.resolve(path.join(dirResolved, "package.json")))
-        if (typeof pkg.huds === "object") {
-            if (typeof pkg.huds.client === "string")
-                HUD[id].client = pkg.huds.client
-            if (typeof pkg.huds.server === "string") {
-                HUD[id].server = path.resolve(dirResolved, pkg.huds.server)
-                const plugin = require(HUD[id].server)
-                HUD[id].plugin = latching.use(plugin, { log, config: data })
+        if (filename !== null)
+            HUD[id].client = filename
+
+        /*  optionally load additional HUD information  */
+        const pkgFilename = path.resolve(path.join(dirResolved, "package.json"))
+        stat = await fs.promises.stat(pkgFilename).catch(() => null)
+        if (stat !== null && stat.isFile()) {
+            const pkg = require(pkgFilename)
+            if (typeof pkg.huds === "object") {
+                if (typeof pkg.huds.client === "string")
+                    HUD[id].client = pkg.huds.client
+                if (typeof pkg.huds.server === "string") {
+                    HUD[id].server = path.resolve(dirResolved, pkg.huds.server)
+                    const plugin = require(HUD[id].server)
+                    HUD[id].plugin = latching.use(plugin, { log, config: data })
+                }
             }
         }
     }
