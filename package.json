@@ -13,10 +13,10 @@
         "type":                       "git",
         "url":                        "https://github.com/rse/huds"
     },
-    "main":                           "src/huds-server.js",
     "browser":                        "dst/huds-client.js",
+    "main":                           "src/huds-server-api.js",
     "bin": {
-        "huds":                       "src/huds-server.js"
+        "huds":                       "src/huds-server-cli.js"
     },
     "upd":                            [ "!chalk" ],
     "devDependencies": {
@@ -59,6 +59,6 @@
     "scripts": {
         "prepublishOnly":             "grunt default",
         "build":                      "grunt default",
-        "huds":                       "node src/huds-server.js"
+        "huds":                       "node src/huds-server-cli.js"
     }
 }

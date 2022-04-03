@@ -12,6 +12,10 @@
 \[`-p`|`--port` *port*\]
 \[`-U`|`--username` *username*\]
 \[`-P`|`--password` *password*\]
+\[`-b`|`--broker` *mqtt-url*\]
+\[`-n`|`--name` *mqtt-peer*\]
+\[`-r`|`--topic-recv` *mqtt-topic*\]
+\[`-s`|`--topic-send` *mqtt-topic*\]
 \[`-d`|`--define` *hud-id*`:`*hud-directory*\[`,`*hud-config-file*\]\]
 
 ## DESCRIPTION
@@ -43,6 +47,18 @@ The following options exist:
 
 -   \[`-P`|`--password` *password*\]:
     Authenticating password for service.
+
+-   \[`-b`|`--broker` *mqtt-url*\]:
+    URL of MQTT broker.
+
+-   \[`-n`|`--name` *mqtt-peer-name*\]:
+    name of MQTT peer at MQTT broker.
+
+-   \[`-r`|`--topic-recv` *mqtt-topic*\]:
+    receive topic at MQTT broker.
+
+-   \[`-s`|`--topic-send` *mqtt-topic*\]:
+    send topic at MQTT broker.
 
 -   \[`-d`|`--define` *hud-id*`:`*hud-directory*\[`,`*hud-config-file*,\[...\]\]\]:
     Define a HUD under the unique identifier *hud-id*, with

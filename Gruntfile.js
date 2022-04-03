@@ -32,7 +32,7 @@ module.exports = function (grunt) {
             options: {
                 overrideConfigFile: "eslint.yaml"
             },
-            "huds-server": [ "src/huds-server.js" ],
+            "huds-server": [ "src/huds-server-*.js" ],
             "huds-client": [ "src/huds-client.js" ]
         },
         browserify: {
