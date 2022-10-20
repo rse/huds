@@ -74,7 +74,7 @@ let huds = null
         .string("s").nargs("s", 1).alias("s", "topic-send").default("s", "")
             .describe("s", "send topic at MQTT broker")
         .array("d").nargs("d", 1).alias("d", "define").default("d", [])
-            .describe("d", "define HUD id:dir[,file]")
+            .describe("d", "define HUD id:dir[,file[,...]]")
         .version(false)
         .strict()
         .showHelpOnFail(true)
