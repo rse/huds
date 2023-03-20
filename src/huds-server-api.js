@@ -147,7 +147,7 @@ class HUDS {
                         this.HUD[id].server = path.resolve(dirResolved, pkg.huds.server)
                         const plugin = require(this.HUD[id].server)
                         this.HUD[id].plugin = this.latching.use(plugin, {
-                            log: (level, msg) => this.log,
+                            log: (level, msg) => this.log(level, msg),
                             config: data
                         })
                     }
