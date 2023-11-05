@@ -11,7 +11,7 @@
     "license":                        "MIT",
     "repository": {
         "type":                       "git",
-        "url":                        "git+https://github.com/rse/huds"
+        "url":                        "git+https://github.com/rse/huds.git"
     },
     "browser":                        "dst/huds-client.js",
     "main":                           "src/huds-server-api.js",
