@@ -49,6 +49,9 @@ module.exports = function (grunt) {
                                         "browsers": "last 8 versions, > 1%, ie 11"
                                     }
                                 } ]
+                            ],
+                            plugins: [
+                                "@babel/plugin-transform-runtime"
                             ]
                         } ],
                         [ "uglifyify", { sourceMap: false, global: true } ]
