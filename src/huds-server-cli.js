@@ -47,7 +47,8 @@ let huds = null
             "[-a <address>] [-p <port>] " +
             "[-U <username>] [-P <password>] " +
             "[-b <broker>] [-n <name>] [-r <topic>] [-s <topic>] " +
-            "[-d <hud-id>:<hud-directory>[,<hud-config-file>[,<hud-config-file>[,...]]]]"
+            "[-d <hud-id>:<hud-directory>[,<hud-config-file>[,<hud-config-file>[,...]]]]" +
+            "[-D <hud-id>:<hud-state-file>]"
         )
         .help("h").alias("h", "help").default("h", false)
             .describe("h", "show usage help")
@@ -73,8 +74,10 @@ let huds = null
             .describe("r", "receive topic at MQTT broker")
         .string("s").nargs("s", 1).alias("s", "topic-send").default("s", "")
             .describe("s", "send topic at MQTT broker")
-        .array("d").nargs("d", 1).alias("d", "define").default("d", [])
-            .describe("d", "define HUD id:dir[,file[,...]]")
+        .array("d").nargs("d", 1).alias("d", "define-config").default("d", [])
+            .describe("d", "define HUD config id:dir[,file[,...]]")
+        .array("D").nargs("D", 1).alias("D", "define-state").default("D", [])
+            .describe("D", "define HUD state id:file")
         .version(false)
         .strict()
         .showHelpOnFail(true)
@@ -109,7 +112,7 @@ let huds = null
     reduce("t", "topicSend")
 
     /*  sanity check usage  */
-    if (argv.define.length === 0)
+    if (argv.defineConfig.length === 0)
         throw new Error("no HUDs defined")
 
     /*  log messages  */
@@ -141,15 +144,16 @@ let huds = null
 
     /*  startup HUDS  */
     huds = new HUDS({
-        address:   argv.address,
-        port:      argv.port,
-        broker:    argv.broker,
-        name:      argv.name,
-        topicRecv: argv.topicRecv,
-        topicSend: argv.topicSend,
-        username:  argv.username,
-        password:  argv.password,
-        define:    argv.define,
+        address:      argv.address,
+        port:         argv.port,
+        broker:       argv.broker,
+        name:         argv.name,
+        topicRecv:    argv.topicRecv,
+        topicSend:    argv.topicSend,
+        username:     argv.username,
+        password:     argv.password,
+        defineConfig: argv.defineConfig,
+        defineState:  argv.defineState,
         log: (level, msg) => log(level, msg)
     })
     await huds.start()

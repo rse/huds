@@ -23,36 +23,38 @@
 */
 
 /*  external requirements  */
-const path          = require("path")
-const fs            = require("fs")
-const HAPI          = require("@hapi/hapi")
-const Inert         = require("@hapi/inert")
-const HAPIAuthBasic = require("@hapi/basic")
-const HAPIWebSocket = require("hapi-plugin-websocket")
-const HAPITraffic   = require("hapi-plugin-traffic")
-const HAPIHeader    = require("hapi-plugin-header")
-const resolve       = require("resolve")
-const jsYAML        = require("js-yaml")
-const Latching      = require("latching")
-const MQTT          = require("async-mqtt")
-const mixinDeep     = require("mixin-deep")
-const my            = require("../package.json")
+const path            = require("path")
+const fs              = require("fs")
+const HAPI            = require("@hapi/hapi")
+const Inert           = require("@hapi/inert")
+const HAPIAuthBasic   = require("@hapi/basic")
+const HAPIWebSocket   = require("hapi-plugin-websocket")
+const HAPITraffic     = require("hapi-plugin-traffic")
+const HAPIHeader      = require("hapi-plugin-header")
+const resolve         = require("resolve")
+const jsYAML          = require("js-yaml")
+const Latching        = require("latching")
+const MQTT            = require("async-mqtt")
+const mixinDeep       = require("mixin-deep")
+const writeFileAtomic = require("write-file-atomic")
+const my              = require("../package.json")
 
 /*  encapsulate HUDS service  */
 class HUDS {
     /*  establish object  */
     constructor (options = {}) {
         this.options = Object.assign({}, {
-            address:   "127.0.0.1",
-            port:      9999,
-            username:  "",
-            password:  "",
-            broker:    "",
-            name:      "",
-            topicRecv: "",
-            topicSend: "",
-            define:    [],
-            log:       null
+            address:      "127.0.0.1",
+            port:         9999,
+            username:     "",
+            password:     "",
+            broker:       "",
+            name:         "",
+            topicRecv:    "",
+            topicSend:    "",
+            defineConfig: [],
+            defineState:  [],
+            log:          null
         }, options)
 
         /*  initialize internal states  */
@@ -89,7 +91,7 @@ class HUDS {
                 stat = await fs.promises.stat(pathname).catch(() => null)
             return { stat, pathname }
         }
-        for (const spec of this.options.define) {
+        for (const spec of this.options.defineConfig) {
             /*  parse definition  */
             const m = spec.match(/^(.+?):(.+?)(?:,(.+))?$/)
             if (m === null)
@@ -153,6 +155,16 @@ class HUDS {
                     }
                 }
             }
+        }
+        for (const spec of this.options.defineState) {
+            /*  parse definition  */
+            const m = spec.match(/^(.+?):(.+?)$/)
+            if (m === null)
+                throw new Error(`invalid HUD id/state combination "${spec}"`)
+            const [ , id, state ] = m
+            if (this.HUD[id] === undefined)
+                throw new Error(`HUD "${id}" not already defined`)
+            this.HUD[id].state = state
         }
 
         /*  establish REST server  */
@@ -334,6 +346,7 @@ class HUDS {
                         return h.response().code(404)
                     if (!stat.isFile())
                         return h.response().code(404)
+                    file = path.resolve(file)
                     return h.file(file, { confine: this.HUD[id].dir })
                 }
             }
@@ -535,6 +548,48 @@ class HUDS {
                 }
                 fanout(id, id, event, data)
                 return h.response().code(201)
+            }
+        })
+
+        /*  serve data persistence endpoints  */
+        this.server.route({
+            method:  "GET",
+            path:    "/{id}/state",
+            options: {
+                auth: requireAuth ? { mode: "required", strategy: "basic" } : false
+            },
+            handler: async (req, h) => {
+                const id = req.params.id
+                this.log(3, `HAPI: receive: remote=${req.info.remoteAddress}, id=${id}, state: read"`)
+                if (this.HUD[id] === undefined)
+                    return h.response("invalid HUD id").code(404)
+                let data = {}
+                if (this.HUD[id].state !== undefined) {
+                    const stat = await fs.promises.stat(this.HUD[id].state).catch(() => null)
+                    if (stat !== null && stat.isFile())  {
+                        const yaml = await fs.promises.readFile(this.HUD[id].state, { encoding: "utf8" })
+                        data = jsYAML.load(yaml)
+                    }
+                }
+                return h.response(data).code(200)
+            }
+        })
+        this.server.route({
+            method:  "POST",
+            path:    "/{id}/state",
+            options: {
+                auth: requireAuth ? { mode: "required", strategy: "basic" } : false,
+                payload: { parse: true }
+            },
+            handler: async (req, h) => {
+                const id = req.params.id
+                this.log(3, `HAPI: receive: remote=${req.info.remoteAddress}, id=${id}, state: write"`)
+                if (this.HUD[id] === undefined)
+                    return h.response("invalid HUD id").code(404)
+                const data = req.payload
+                const yaml = jsYAML.dump(data, {})
+                await writeFileAtomic(this.HUD[id].state, yaml, { encoding: "utf8" })
+                return h.response().code(204)
             }
         })
 

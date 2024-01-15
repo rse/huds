@@ -16,7 +16,8 @@
 \[`-n`|`--name` *mqtt-peer*\]
 \[`-r`|`--topic-recv` *mqtt-topic*\]
 \[`-s`|`--topic-send` *mqtt-topic*\]
-\[`-d`|`--define` *hud-id*`:`*hud-directory*\[`,`*hud-config-file*\]\]
+\[`-d`|`--define-config` *hud-id*`:`*hud-directory*\[`,`*hud-config-file*\]\]
+\[`-D`|`--define-state` *hud-id*`:`*hud-state-file*\]
 
 ## DESCRIPTION
 
@@ -60,10 +61,14 @@ The following options exist:
 -   \[`-s`|`--topic-send` *mqtt-topic*\]:
     send topic at MQTT broker.
 
--   \[`-d`|`--define` *hud-id*`:`*hud-directory*\[`,`*hud-config-file*,\[...\]\]\]:
+-   \[`-d`|`--define-config` *hud-id*`:`*hud-directory*\[`,`*hud-config-file*,\[...\]\]\]:
     Define a HUD under the unique identifier *hud-id*, with
     base directory *hud-directory* and zero or more
     (mixed together) YAML configuration files *hud-config-file*.
+
+-   \[`-D`|`--define-state` *hud-id*`:`*hud-state-file*\]
+    Define an optional state for the HUD under the unique identifier *hud-id*, with
+    state file *hud-state-file*.
 
 ## EXAMPLE
 

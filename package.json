@@ -54,7 +54,9 @@
         "micromatch":                 "4.0.5",
         "mixin-deep":                 "2.0.1",
         "reconnecting-websocket":     "4.4.0",
-        "async-mqtt":                 "2.6.3"
+        "async-mqtt":                 "2.6.3",
+        "write-file-atomic":          "5.0.1",
+        "axios":                      "1.6.5"
     },
     "scripts": {
         "prepublishOnly":             "grunt default",

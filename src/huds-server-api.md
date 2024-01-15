@@ -15,10 +15,11 @@ const huds = new HUDS({
     name:      "trainer",
     topicRecv: "stream/trainer/sender",
     topicSend: "stream/trainer/receiver"
-    define:    [
+    defineConfig: [
         "analoglock:@analogclock,@analogclock/index-huds.yaml",
         "training:@huds-hud-training,@huds-hud-training/training.yaml"
     ],
+    defineState: [],
     log: (level, msg) =>
         console.log(`[${level}] ${msg}\n`)
 })

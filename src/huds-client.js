@@ -25,13 +25,14 @@
 const EventEmitter = require("eventemitter3")
 const WebSocket    = require("reconnecting-websocket")
 const micromatch   = require("micromatch")
+const axios        = require("axios/dist/browser/axios.cjs")
 
 class HUDS extends EventEmitter {
     constructor () {
         /*  initialize EventEmitter  */
         super()
 
-        /*  determine own URL  */
+        /*  determine own URL (for events via WebSockets)  */
         let url = ""
         if (document.location.protocol === "http:")
             url += "ws:"
@@ -41,7 +42,15 @@ class HUDS extends EventEmitter {
         url += document.location.host
         url += document.location.pathname
         url += "events"
-        this.url = url
+        this.urlEvents = url
+
+        /*  determine own URL (for states via REST)  */
+        url = document.location.protocol
+        url += "//"
+        url += document.location.host
+        url += document.location.pathname
+        url += "state"
+        this.urlState = url
 
         /*  determine options  */
         this.options = {}
@@ -71,8 +80,8 @@ class HUDS extends EventEmitter {
     /*  connect to server  */
     connect () {
         this.disconnect()
-        this.emit("connect", this.url)
-        this.ws = new WebSocket(this.url)
+        this.emit("connect", this.urlEvents)
+        this.ws = new WebSocket(this.urlEvents)
         this.ws.addEventListener("open", (event) => {
             this.emit("open", event)
         })
@@ -91,7 +100,7 @@ class HUDS extends EventEmitter {
 
     /*  disconnect from server  */
     disconnect () {
-        this.emit("disconnect", this.url)
+        this.emit("disconnect", this.urlEvents)
         if (this.ws !== null)
             this.ws.close()
     }
@@ -196,6 +205,28 @@ class HUDS extends EventEmitter {
             }
             return css
         }
+    }
+
+    /*  read state  */
+    async stateRead () {
+        const data = await axios({
+            method:       "GET",
+            url:          `${this.urlState}`,
+            responseType: "json"
+        }).then((response) => response.data).catch(() => null)
+        return data
+    }
+
+    /*  write state  */
+    async stateWrite (data) {
+        await axios({
+            method:       "POST",
+            url:          `${this.urlState}`,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data
+        }).catch(() => null)
     }
 }
 
