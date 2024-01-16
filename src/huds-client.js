@@ -52,6 +52,13 @@ class HUDS extends EventEmitter {
         url += "state"
         this.urlState = url
 
+        /*  determine own URL (for arbitrary access)  */
+        url = document.location.protocol
+        url += "//"
+        url += document.location.host
+        url += document.location.pathname
+        this.urlPrefix = url
+
         /*  determine options  */
         this.options = {}
         if (document.location.hash) {
@@ -227,6 +234,11 @@ class HUDS extends EventEmitter {
             },
             data
         }).catch(() => null)
+    }
+
+    /*  pass-through REST functionality  */
+    async axios (options) {
+        return axios({ ...options, url: `${this.urlPrefix}${options.url ?? ""}` })
     }
 }
 
