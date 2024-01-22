@@ -586,6 +586,8 @@ class HUDS {
                 this.log(3, `HAPI: receive: remote=${req.info.remoteAddress}, id=${id}, state: write"`)
                 if (this.HUD[id] === undefined)
                     return h.response("invalid HUD id").code(404)
+                if (this.HUD[id].state === undefined)
+                    return h.response("no persistent HUDS state").code(503)
                 const data = req.payload
                 const yaml = jsYAML.dump(data, {})
                 await writeFileAtomic(this.HUD[id].state, yaml, { encoding: "utf8" })
