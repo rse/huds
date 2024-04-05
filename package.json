@@ -25,19 +25,19 @@
         "grunt-contrib-clean":             "2.0.1",
         "grunt-browserify":                "6.0.0",
         "grunt-eslint":                    "24.3.0",
-        "eslint":                          "8.56.0",
+        "eslint":                          "8.57.0",
         "eslint-config-standard":          "17.1.0",
         "eslint-plugin-import":            "2.29.1",
         "eslint-plugin-node":              "11.1.0",
         "babelify":                        "10.0.0",
-        "@babel/preset-env":               "7.23.9",
-        "@babel/plugin-transform-runtime": "7.23.9",
+        "@babel/preset-env":               "7.24.4",
+        "@babel/plugin-transform-runtime": "7.24.3",
         "uglifyify":                       "5.0.2",
         "browserify-header":               "1.1.0",
         "browserify-derequire":            "1.1.1"
     },
     "dependencies": {
-        "@hapi/hapi":                      "21.3.3",
+        "@hapi/hapi":                      "21.3.8",
         "@hapi/inert":                     "7.1.0",
         "@hapi/boom":                      "10.0.1",
         "@hapi/basic":                     "7.0.2",
@@ -57,8 +57,8 @@
         "reconnecting-websocket":          "4.4.0",
         "async-mqtt":                      "2.6.3",
         "write-file-atomic":               "5.0.1",
-        "axios":                           "1.6.7",
-        "@babel/runtime":                  "7.23.9"
+        "axios":                           "1.6.8",
+        "@babel/runtime":                  "7.24.4"
     },
     "scripts": {
         "prepublishOnly":                  "grunt default",
