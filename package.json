@@ -52,7 +52,7 @@
         "js-yaml":                         "4.1.0",
         "eventemitter3":                   "5.0.1",
         "latching":                        "1.1.2",
-        "micromatch":                      "4.0.7",
+        "micromatch":                      "4.0.8",
         "mixin-deep":                      "2.0.1",
         "reconnecting-websocket":          "4.4.0",
         "async-mqtt":                      "2.6.3",
