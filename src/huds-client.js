@@ -23,7 +23,7 @@
 */
 
 const EventEmitter = require("eventemitter3")
-const WebSocket    = require("reconnecting-websocket")
+const WebSocket    = require("@opensumi/reconnecting-websocket")
 const micromatch   = require("micromatch")
 const axios        = require("axios/dist/browser/axios.cjs")
 
