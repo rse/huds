@@ -30,14 +30,14 @@
         "eslint-plugin-import":             "2.31.0",
         "eslint-plugin-node":               "11.1.0",
         "babelify":                         "10.0.0",
-        "@babel/preset-env":                "7.25.8",
-        "@babel/plugin-transform-runtime":  "7.25.7",
+        "@babel/preset-env":                "7.26.0",
+        "@babel/plugin-transform-runtime":  "7.25.9",
         "uglifyify":                        "5.0.2",
         "browserify-header":                "1.1.0",
         "browserify-derequire":             "1.1.1"
     },
     "dependencies": {
-        "@hapi/hapi":                       "21.3.10",
+        "@hapi/hapi":                       "21.3.12",
         "@hapi/inert":                      "7.1.0",
         "@hapi/boom":                       "10.0.1",
         "@hapi/basic":                      "7.0.2",
@@ -48,7 +48,7 @@
         "ws":                               "8.18.0",
         "yargs":                            "17.7.2",
         "chalk":                            "4.1.2",
-        "resolve":                          "1.22.8",
+        "resolve":                          "1.22.10",
         "js-yaml":                          "4.1.0",
         "eventemitter3":                    "5.0.1",
         "latching":                         "1.1.2",
@@ -57,8 +57,8 @@
         "@opensumi/reconnecting-websocket": "4.4.0",
         "async-mqtt":                       "2.6.3",
         "write-file-atomic":                "6.0.0",
-        "axios":                            "1.7.7",
-        "@babel/runtime":                   "7.25.7"
+        "axios":                            "1.7.9",
+        "@babel/runtime":                   "7.26.0"
     },
     "scripts": {
         "prepublishOnly":                   "grunt default",
