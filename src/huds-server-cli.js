@@ -39,7 +39,7 @@ let huds = null
 /*  establísh asynchronous context  */
 ;(async () => {
     /*  parse command-line arguments  */
-    const argv = yargs
+    const argv = yargs()
         /* eslint indent: off */
         .usage("Usage: $0 " +
             "[-h|--help] [-V|--version] " +
