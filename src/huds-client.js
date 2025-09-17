@@ -75,6 +75,8 @@ class HUDS extends EventEmitter {
 
         /*  determine own HUD id  */
         const m = document.location.pathname.match(/([^/]+)\/$/)
+        if (!m || !m[1])
+            throw new Error("invalid HUD pathname - cannot determine HUD id")
         this.id = m[1]
 
         /*  start with no WebSocket connection  */
@@ -108,8 +110,10 @@ class HUDS extends EventEmitter {
     /*  disconnect from server  */
     disconnect () {
         this.emit("disconnect", this.urlEvents)
-        if (this.ws !== null)
+        if (this.ws !== null) {
             this.ws.close()
+            this.ws = null
+        }
     }
 
     /*  send an event to a HUD  */

@@ -319,7 +319,7 @@ class HUDS {
                             else     provide(res)
                         })
                     })
-                    if (resolve === null) {
+                    if (resolved === null) {
                         /*  try to serve file from NPM package, relative to HUDS perspective
                             (this is necessary if a HUD is installed with its own dependencies side-by-side)  */
                         try {

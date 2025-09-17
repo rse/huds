@@ -109,7 +109,7 @@ let huds = null
     reduce("b", "broker")
     reduce("n", "name")
     reduce("r", "topicRecv")
-    reduce("t", "topicSend")
+    reduce("s", "topicSend")
 
     /*  sanity check usage  */
     if (argv.defineConfig.length === 0)
