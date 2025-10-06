@@ -313,10 +313,10 @@ class HUDS {
                     /*  try to serve file from NPM package, relative to HUD directory
                         (this is the standard case)  */
                     /* eslint promise/param-names: off */
-                    let resolved = await new Promise((provide) => {
+                    let resolved = await new Promise((promiseResolve) => {
                         resolve(file, { basedir: this.HUD[id].dir }, (err, res) => {
-                            if (err) provide(null)
-                            else     provide(res)
+                            if (err) promiseResolve(null)
+                            else     promiseResolve(res)
                         })
                     })
                     if (resolved === null) {
