@@ -36,7 +36,7 @@ const my      = require("../package.json")
 /*  keep global HUDS instance  */
 let huds = null
 
-/*  establísh asynchronous context  */
+/*  establish asynchronous context  */
 ;(async () => {
     /*  parse command-line arguments  */
     const argv = yargs()
