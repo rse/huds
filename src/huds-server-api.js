@@ -235,7 +235,7 @@ class HUDS {
             this.latching.hook("hapi:on-log", "none", event, tags)
         })
 
-        /*  register Basic authentication stategy  */
+        /*  register Basic authentication strategy  */
         const requireAuth = (this.options.username !== "" && this.options.password !== "")
         this.server.auth.strategy("basic", "basic", {
             validate: async (request, username, password, h) => {
