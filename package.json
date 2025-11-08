@@ -25,9 +25,9 @@
         "grunt-contrib-clean":              "2.0.1",
         "grunt-browserify":                 "6.0.0",
         "grunt-eslint":                     "26.0.0",
-        "eslint":                           "9.38.0",
-        "@eslint/js":                       "9.38.0",
-        "globals":                          "16.4.0",
+        "eslint":                           "9.39.1",
+        "@eslint/js":                       "9.39.1",
+        "globals":                          "16.5.0",
         "eslint-plugin-import":             "2.32.0",
         "eslint-plugin-n":                  "17.23.1",
         "babelify":                         "10.0.0",
@@ -38,7 +38,7 @@
         "browserify-derequire":             "1.1.1"
     },
     "dependencies": {
-        "@hapi/hapi":                       "21.4.3",
+        "@hapi/hapi":                       "21.4.4",
         "@hapi/inert":                      "7.1.0",
         "@hapi/boom":                       "10.0.1",
         "@hapi/basic":                      "7.0.2",
@@ -58,7 +58,7 @@
         "@opensumi/reconnecting-websocket": "4.4.0",
         "async-mqtt":                       "2.6.3",
         "write-file-atomic":                "7.0.0",
-        "axios":                            "1.12.2",
+        "axios":                            "1.13.2",
         "@babel/runtime":                   "7.28.4"
     },
     "scripts": {
